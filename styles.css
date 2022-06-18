@@ -1,0 +1,43 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+}
+
+.sidebar {
+    width: 200px;
+    height: 100%;
+    padding: 15px;
+    border: 1px solid grey;
+}
+
+.main{
+    width: calc(100vw - 200px);
+    height: 100%;
+    border: 1px solid grey;
+}
+
+.nav-bar{
+    height: 50px;
+    text-align: right;
+    border: 1px solid grey;
+}
+
+.sub-menu{
+    height: 100px;
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid grey;
+}
+
+.card{
+    /* border: 1px solid grey; */
+}
