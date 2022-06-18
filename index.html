@@ -16,14 +16,21 @@
     <div class="container">
       <!-- sidebar -->
       <aside class="sidebar">
-        <ul class="sidebar-menu" data-categories-container>
-          <li class="sidebar-item">Work</li>
-          <li class="sidebar-item">School</li>
+        <div class="dashboard" data-dashboard>Dashboard</div>
+        <ul class="categories-menu" data-categories-container>
+          <li class="category-item active">Work</li>
+          <li class="category-item">School</li>
         </ul>
-        <form class="sidebar-form" data-new-category-form>
-          <input type="text" id="new-category" placeholder="New category" data-new-category-input/>
+        <form class="new-category-form" data-new-category-form>
+          <input
+            type="text"
+            id="new-category"
+            placeholder="New category"
+            data-new-category-input
+          />
           <button class="btn btn-create-category">+</button>
         </form>
+        <button class="delete-category" data-delete-category>Delete category</button>
       </aside>
 
       <!-- main -->
@@ -35,16 +42,18 @@
 
         <!-- sub-menu -->
         <div class="sub-menu">
-          <h2 class="category-name">Work</h2>
-          <div class="task-remain">2 tasks remain</div>
-          <form class="create-todo-form">
-            <input type="text" placeholder="new task" />
+          <h2 class="display-category-title" data-display-category-title>
+            Work
+          </h2>
+          <div class="task-remain" data-task-remain>2 tasks remain</div>
+          <form class="new-task-form" data-new-task-form>
+            <input type="text" placeholder="new task" data-new-task-input />
             <button class="btn btn-create-task">+</button>
           </form>
         </div>
 
         <!-- card -->
-        <div class="tasks-container">
+        <div class="tasks-container" data-tasks-container>
           <div class="task-wrapper">
             <div class="task-name">
               <input type="checkbox" id="task-1" />
@@ -64,14 +73,28 @@
               </label>
             </div>
           </div>
+        </div>
 
-          <div class="delete-container">
-            <button class="clear">Clear completed tasks</button>
-            <button class="delete">Delete list</button>
-          </div>
+        <div class="delete-container">
+          <button class="clear" data-clear-completed-tasks>Clear completed tasks</button>
+          <button class="delete" data-delete-whole-list>
+            Delete whole list
+          </button>
         </div>
       </div>
     </div>
+
+    <!-- task template -->
+    <template id="task-template">
+      <div class="task-wrapper">
+        <div class="task-name">
+          <input type="checkbox" />
+          <label>
+            <span class="custom-checkbox"></span>
+          </label>
+        </div>
+      </div>
+    </template>
   </body>
   <script src="scripts.js"></script>
 </html>

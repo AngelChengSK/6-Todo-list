@@ -6,6 +6,10 @@
   box-sizing: border-box;
 }
 
+/*  ========
+    general
+    ======== */
+
 .container{
     width: 100vw;
     height: 100vh;
@@ -40,4 +44,28 @@
 
 .card{
     /* border: 1px solid grey; */
+}
+
+/*  ========
+    sidebar
+    ======== */
+.category-item:hover{
+    color: rgb(125, 125, 125);
+}
+
+.category-item.active{
+    font-weight: bold;
+    background-color: lightgrey;
+}
+
+/*  ========
+    card
+    ======== */
+
+[type="checkbox"] {
+    transform: scale(0);
+}
+
+[type="checkbox"]:checked + label {
+    background-color: rgb(71, 71, 71);
 }
