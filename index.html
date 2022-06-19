@@ -24,18 +24,48 @@
           <li class="category-item active">Work</li>
           <li class="category-item">School</li>
         </ul>
-        <form class="new-category-form" data-new-category-form>
-          <input
-            type="text"
-            class="new"
-            placeholder="New category"
-            data-new-category-input
-          />
-          <button class="btn btn-create-category">+</button>
-        </form>
-        <button class="delete-category" data-delete-category>
-          Delete category
-        </button>
+
+        <div class="sidebar-bottom">
+
+          <!-- btn: add -->
+          <div class="dropdown add-category-container" data-dropdown>
+            <button class="dropdown-btn btn-add-category">
+              <img
+                src="/pictures/add-new-category.png"
+                alt=""
+                style="width: 100%; height: 100%"
+                data-dropdown-btn
+              />
+            </button>
+
+            <!-- sub-menu: add -->
+            <div class="dropdown-menu new-category-form-container">
+              <form
+                class="new-category-form"
+                data-new-category-form
+              >
+                <input
+                  type="text"
+                  class="add-category-input"
+                  placeholder="New category"
+                  data-new-category-input
+                />
+                <button class="btn-create-category">+</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- btn-delete -->
+          <div class="detele-category-container">
+            <button class="btn-delete-category" data-delete-category>
+              <img
+                src="/pictures/delete.png"
+                alt=""
+                style="width: 100%; height: 100%"
+              />
+            </button>
+          </div>
+        </div>
         <!-- </div> -->
       </aside>
 
@@ -63,26 +93,93 @@
             <h2 class="category-title" data-display-category-title>Work</h2>
             <div class="task-remain" data-task-remain>2 tasks remain</div>
           </div>
-          <div class="delete-container">
-            <button class="clear" data-clear-completed-tasks>
-              Clear completed tasks
-            </button>
-            <button class="delete" data-delete-whole-list>
-              Empty the list
-            </button>
-          </div>
+
           <div class="sub-menu-settings">
-            <div class="view-options">change view</div>
-            <form class="new-task-form" data-new-task-form>
-              <input type="text" placeholder="new task" data-new-task-input />
-              <button class="btn btn-create-task">+</button>
-            </form>
+            <!-- btn: delete -->
+            <div class="dropdown delete-options-container" data-dropdown>
+              <div class="dropdown-btn btn-trash-can-container">
+                <button class="btn-trash-can">
+                  <img
+                    src="/pictures/trash-can.png"
+                    style="width: 100%; height: 100%"
+                    data-dropdown-btn
+                  />
+                </button>
+              </div>
+              <!-- sub-menu: delete -->
+              <div class="dropdown-menu delete-options-menu">
+                <button class="btn-clear-tasks" data-clear-completed-tasks>
+                  Clear completed tasks
+                </button>
+                <button class="btn-empty-tasks" data-delete-whole-list>
+                  Empty the list
+                </button>
+              </div>
+            </div>
+
+            <!-- btn: view modules -->
+            <div class="btn-view-modules-container" data-view-modules>
+              <button class="btn-view-modules">
+                <img
+                  src="/pictures/view-modules.png"
+                  style="width: 100%; height: 100%"
+                />
+              </button>
+            </div>
+
+            <!-- btn: view lists -->
+            <div class="btn-view-lists-container" data-view-lists>
+              <button class="btn-view-lists">
+                <img
+                  src="/pictures/view-lists.png"
+                  style="width: 100%; height: 100%"
+                />
+              </button>
+            </div>
+
+            <!-- btn: add -->
+            <div class="dropdown add-task-container" data-dropdown>
+              <button class="dropdown-btn btn-add-task">
+                <img
+                  src="/pictures/add-new-task.png"
+                  alt=""
+                  data-dropdown-btn
+                />
+              </button>
+
+              <!-- sub-menu: add -->
+              <form class="dropdown-menu new-task-form" data-new-task-form>
+                <div class="form-row">
+                  <label>Title:</label>
+                  <input type="text" data-new-task-input />
+                </div>
+                <div class="form-row">
+                  <label>Description:</label>
+                  <input type="text" />
+                </div>
+                <div class="form-row">
+                  <label for="">Due date:</label>
+                  <input type="date" />
+                </div>
+                <div class="form-row">
+                  <label for="">Priority:</label>
+                  <button class="priority-high">High</button>
+                  <button class="priority-medium">Medium</button>
+                  <button class="priority-low">Low</button>
+                </div>
+                <div class="form-row">
+                  <label>Remarks</label>
+                  <input type="text" />
+                </div>
+                <button class="btn-create-task">Add task</button>
+              </form>
+            </div>
           </div>
         </div>
 
         <!-- card -->
         <div class="card">
-          <div class="tasks-container" data-tasks-container>
+          <div class="tasks-container view-lists" data-tasks-container>
             <div class="task-wrapper">
               <div class="task-name">
                 <input type="checkbox" id="task-1" />

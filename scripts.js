@@ -16,6 +16,8 @@ const newTaskForm = document.querySelector('[data-new-task-form]');
 const newTaskInput = document.querySelector('[data-new-task-input]');
 const tasksContainer = document.querySelector('[data-tasks-container]');
 const taskTemplate = document.querySelector('#task-template');
+
+const deleteTaskIcon = document.querySelector('[data-delete-icon]');
 const clearCompletedTasksBtn = document.querySelector(
   '[data-clear-completed-tasks]'
 );
@@ -117,6 +119,26 @@ DashboardBtn.addEventListener('click', () => {
 });
 
 deleteCategoryBtn.addEventListener('click', deleteCategory);
+
+//dropdown menu
+document.addEventListener('click', (e) => {
+  const isDropdownBtn = e.target.matches('[data-dropdown-btn]');
+  if (!isDropdownBtn && e.target.closest('[data-dropdown]') !== null) return;
+  // if it is not a dropdown btn && is inside a dropdown menu, return
+  //.closest will return the closest ancestor that match the selecting criteria
+
+  let currentDropdown;
+  if (isDropdownBtn) {
+    currentDropdown = e.target.closest('[data-dropdown]');
+    currentDropdown.classList.toggle('show');
+  }
+
+  document.querySelectorAll('[data-dropdown].show').forEach((dropdown) => {
+    //close the dropdown that has been opened, except the one I just clicked
+    if (dropdown === currentDropdown) return;
+    dropdown.classList.remove('show');
+  });
+});
 clearCompletedTasksBtn.addEventListener('click', clearCompletedTasks);
 deleteWholeListBtn.addEventListener('click', deleteWholeList);
 
