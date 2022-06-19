@@ -1,3 +1,11 @@
+:root {
+  --clr-background: rgb(241, 245, 248);
+  --clr-light: rgba(255, 255, 255, 1);
+  --clr-light-grey: rgba(238, 242, 243, 0.422);
+  --box-shadow: rgb(186, 186, 186);
+  --font-dark-grey: rgb(122, 130, 130);
+}
+
 *,
 *::before,
 *::after {
@@ -9,63 +17,258 @@
 /*  ========
     general
     ======== */
+body {
+  font-family: 'Source Sans Pro', sans-serif;
+  background-color: var(--clr-background);
+  color: var(--font-dark-grey);
+}
 
-.container{
-    width: 100vw;
-    height: 100vh;
-    display: flex;
+.container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
 }
 
 .sidebar {
-    width: 200px;
-    height: 100%;
-    padding: 15px;
-    border: 1px solid grey;
+  width: 250px;
+  height: 100%;
+  font-size: 18px;
+  margin-right: 5px;
+  background-color: var(--clr-light);
+  box-shadow: 0 0 10px 1px var(--box-shadow);
+  z-index: 1;
+  position: relative;
+  /* border: 1px solid grey; */
 }
 
-.main{
-    width: calc(100vw - 200px);
-    height: 100%;
-    border: 1px solid grey;
+.main {
+  --padding-size: 50px;
+
+  width: calc(100vw - 200px);
+  height: 100%;
+
+  /* border: 1px solid rgb(243, 50, 50); */
 }
 
-.nav-bar{
-    height: 50px;
-    text-align: right;
-    border: 1px solid grey;
+.nav-bar {
+  height: 60px;
+  text-align: right;
+  font-size: 18px;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  padding: 0 var(--padding-size);
+  background-color: var(--clr-light);
+  box-shadow: 0 0 10px 1px var(--box-shadow);
+  /* border: 1px solid grey; */
 }
 
-.sub-menu{
-    height: 100px;
-    display: flex;
-    justify-content: space-between;
-    border: 1px solid grey;
+.sub-menu {
+  height: 110px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 var(--padding-size);
+
+  /* border: 1px solid grey; */
 }
 
-.card{
-    /* border: 1px solid grey; */
+.card {
+  width: 100%;
+  height: calc(100vh - 190px);
+  padding: 0px var(--padding-size);
+  /* border: 1px solid grey; */
 }
 
 /*  ========
     sidebar
     ======== */
-.category-item:hover{
-    color: rgb(125, 125, 125);
+.sidebar {
+  font-weight: bold;
+  letter-spacing: 0.5px;
 }
 
-.category-item.active{
-    font-weight: bold;
-    background-color: lightgrey;
+.profile-pic {
+  width: 60px;
+  height: 60px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
+  color: white;
+  border-radius: 50%;
+  margin: 50px auto;
+}
+
+.dashboard,
+.categories-title,
+.sidebar li,
+.sidebar form,
+.delete-category {
+  padding: 10px 50px;
+  margin: 10px 0;
+}
+
+.dashboard::before {
+  content: url('data:image/svg+xml,%3Csvg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"%3E%3Cg%3E%3Cpath fill="none" d="M0 0h24v24H0z"%3E%3C/path%3E%3Cpath d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"%3E%3C/path%3E%3C/g%3E%3C/svg%3E');
+  position: absolute;
+  top: 172px;
+  left: 20px;
+}
+
+.categories-title {
+  border-bottom: 1px solid black;
+}
+
+.categories-title::before {
+  content: url('data:image/svg+xml,%3Csvg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M5,22h14c1.103,0,2-0.897,2-2V5c0-1.103-0.897-2-2-2h-2c0-0.553-0.447-1-1-1H8C7.447,2,7,2.447,7,3H5C3.897,3,3,3.897,3,5 v15C3,21.103,3.897,22,5,22z M5,5h2v2h10V5h2v15H5V5z"%3E%3C/path%3E%3Cpath d="M11 13.586L9.207 11.793 7.793 13.207 11 16.414 16.207 11.207 14.793 9.793z"%3E%3C/path%3E%3C/svg%3E');
+  position: absolute;
+  top: 225px;
+  left: 20px;
+}
+
+.categories-title::after {
+  content: '';
+  width: 10px;
+  height: 2px solid grey;
+  position: absolute;
+  top: 100px;
+  left: 0;
+}
+
+.dashboard:hover,
+.category-item:hover {
+  color: rgb(85, 192, 189);
+}
+
+.dashboard.active,
+.category-item.active {
+  font-weight: bold;
+  background-color: rgba(204, 248, 239, 0.521);
+}
+
+.sidebar form {
+  display: inline-flex;
+  position: relative;
+}
+
+.new {
+  order: 2;
+  border: none;
+  border-bottom: 1px solid grey;
+  width: 150px;
+  height: 20px;
+  font-size: 18px;
+  outline: none;
+}
+
+.new:focus {
+  border-bottom: 3px solid grey;
+}
+
+.new::placeholder {
+  opacity: 0.5;
+}
+
+.new:focus::placeholder {
+  opacity: 0.3;
+}
+
+.btn-create-category {
+  background-color: transparent;
+  border: none;
+  position: absolute;
+  top: 7px;
+  left: 23px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.delete-category {
+  background-color: transparent;
+  border: none;
+}
+
+/*  ========
+    nav-bar
+    ======== */
+
+.search-bar {
+  position: relative;
+}
+
+.search-input {
+  font-size: 18px;
+  background-color: var(--clr-light-grey);
+  border: none;
+  padding: 5px 35px 5px 20px;
+  border-radius: 15px;
+  z-index: 2;
+}
+
+.search-input::placeholder {
+  opacity: 0.5;
+}
+
+.btn-cancel-search {
+  background-color: transparent;
+  border: none;
+  font-size: 17px;
+  position: absolute;
+  top: 5px;
+  right: 15px;
+  opacity: 0;
+  transition: opacity 200ms ease-in;
+}
+
+.btn-cancel-search.active {
+  opacity: 0.5;
+}
+
+.user-name {
+  margin-left: 30px;
+}
+
+/*  ========
+    sub-menu
+    ======== */
+
+.sub-menu-settings {
+  display: flex;
 }
 
 /*  ========
     card
     ======== */
 
-[type="checkbox"] {
-    transform: scale(0);
+.tasks-container {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(210px, 1fr));
+  gap: 25px;
+  /* border: 1px solid red; */
+  width: 100%;
+  max-height: 100%;
+  margin-top: 20px;
+  overflow: scroll;
+  overflow-x: auto;
+  overflow-y: auto;
 }
 
-[type="checkbox"]:checked + label {
-    background-color: rgb(71, 71, 71);
+.task-wrapper {
+  height: 200px;
+  background-color: white;
+  border-radius: 5px;
+  border-bottom: 5px solid rgb(128, 211, 213);
+  padding: 20px;
+  /* box-shadow: 3px 3px 1px -1px rgb(0, 0, 0); */
+  /* border: 1px solid red; */
+}
+
+[type='checkbox'] {
+  transform: scale(0);
+}
+
+[type='checkbox']:checked + label {
+  background-color: rgb(195, 194, 194);
 }

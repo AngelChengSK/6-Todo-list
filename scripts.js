@@ -64,7 +64,7 @@ newTaskForm.addEventListener('submit', (e) => {
   const newTaskName = newTaskInput.value;
   const newTask = createTask(newTaskName);
   const selectedCategory = masterList.find(
-    (category) => category.id === selectedCategoryId
+    (category) => category.id == selectedCategoryId
   );
   selectedCategory.tasks.push(newTask);
   newTaskInput.value = null;
@@ -77,24 +77,16 @@ tasksContainer.addEventListener('click', (e) => {
     // if input tag's id and label tag's for property have the same value, the two tags are linked up, when users click on the label tag(=the text), the input tag (=checkbox) will also be checked
     // otherwise, the input tag (=checkbox) will only be checked when users click on it directly
     const selectedTaskId = e.target.id;
-    if (selectedCategoryId === null) {
-      const selectedCategory = masterList.find(category => category.tasks.some(task => task.id == selectedTaskId))
-      const selectedTask = selectedCategory.tasks.find(task => task.id == selectedTaskId)
-      selectedTask.complete = e.target.checked
-      save();
-      updateTaskRemain(selectedCategory);
-    } else {
-      // const selectedTaskId = e.target.id;
-      const selectedCategory = masterList.find(
-        (category) => category.id == selectedCategoryId
-      );
-      const selectedTask = selectedCategory.tasks.find(
-        (task) => task.id === selectedTaskId
-      );
-      selectedTask.complete = e.target.checked;
-      save();
-      updateTaskRemain(selectedCategory);
-    }
+
+    const selectedCategory = masterList.find((category) =>
+      category.tasks.some((task) => task.id == selectedTaskId)
+    );
+    const selectedTask = selectedCategory.tasks.find(
+      (task) => task.id == selectedTaskId
+    );
+    selectedTask.complete = e.target.checked;
+    save();
+    updateTaskRemain(selectedCategory);
   }
 });
 
@@ -106,17 +98,24 @@ searchInput.addEventListener('keyup', (e) => {
     e.preventDefault();
     searchInput.value = '';
   }
+  if (searchInput.value !== '') {
+    searchCancel.classList.add('active');
+  } else {
+    searchCancel.classList.remove('active');
+  }
 });
 
 searchCancel.addEventListener('click', () => {
   searchInput.value = '';
   searchTasks('');
+  searchCancel.classList.remove('active');
 });
 
 DashboardBtn.addEventListener('click', () => {
   selectedCategoryId = null;
   saveAndRender();
 });
+
 deleteCategoryBtn.addEventListener('click', deleteCategory);
 clearCompletedTasksBtn.addEventListener('click', clearCompletedTasks);
 deleteWholeListBtn.addEventListener('click', deleteWholeList);
@@ -209,7 +208,7 @@ function renderCategories() {
     newElement.classList.add('category-item');
     newElement.innerText = item.categoryName;
     newElement.dataset.categoryId = item.id;
-    if (selectedCategoryId === item.id) {
+    if (selectedCategoryId == item.id) {
       newElement.classList.add('active');
     }
     categoriesContainer.append(newElement);
@@ -255,7 +254,7 @@ function deleteCategory() {
 
 function clearCompletedTasks() {
   let selectedCategory = masterList.find(
-    (category) => category.id === selectedCategoryId
+    (category) => category.id == selectedCategoryId
   );
   selectedCategory.tasks = selectedCategory.tasks.filter(
     (task) => task.complete === false
@@ -265,7 +264,7 @@ function clearCompletedTasks() {
 
 function deleteWholeList() {
   const selectedCategory = masterList.find(
-    (category) => category.id === selectedCategoryId
+    (category) => category.id == selectedCategoryId
   );
   selectedCategory.tasks = [];
   saveAndRender();

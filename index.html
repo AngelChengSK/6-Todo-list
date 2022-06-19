@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Todo list</title>
-    <link rel="stylesheet" href="reset.css" />
+    <!-- <link rel="stylesheet" href="reset.css" /> -->
     <link rel="stylesheet" href="styles.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap"
@@ -16,7 +16,10 @@
     <div class="container">
       <!-- sidebar -->
       <aside class="sidebar">
+        <!-- <div class="sidebar-container"> -->
+        <div class="profile-pic">Angel</div>
         <div class="dashboard" data-dashboard>Dashboard</div>
+        <div class="categories-title">All categories</div>
         <ul class="categories-menu" data-categories-container>
           <li class="category-item active">Work</li>
           <li class="category-item">School</li>
@@ -24,7 +27,7 @@
         <form class="new-category-form" data-new-category-form>
           <input
             type="text"
-            id="new-category"
+            class="new"
             placeholder="New category"
             data-new-category-input
           />
@@ -33,6 +36,7 @@
         <button class="delete-category" data-delete-category>
           Delete category
         </button>
+        <!-- </div> -->
       </aside>
 
       <!-- main -->
@@ -41,12 +45,13 @@
         <nav class="nav-bar">
           <div class="search-bar">
             <!-- <form class="search-bar" data-search-bar-form> -->
-              <input
-                type="text"
-                placeholder="search for task"
-                data-search-bar-input
-              />
-              <button class="btn btn-cancel-search" data-cancel-search>x</button>
+            <input
+              type="text"
+              placeholder="search"
+              class="search-input"
+              data-search-bar-input
+            />
+            <button class="btn btn-cancel-search" data-cancel-search>⨉</button>
             <!-- </form> -->
           </div>
           <div class="user-name">Username</div>
@@ -54,46 +59,49 @@
 
         <!-- sub-menu -->
         <div class="sub-menu">
-          <h2 class="display-category-title" data-display-category-title>
-            Work
-          </h2>
-          <div class="task-remain" data-task-remain>2 tasks remain</div>
-          <form class="new-task-form" data-new-task-form>
-            <input type="text" placeholder="new task" data-new-task-input />
-            <button class="btn btn-create-task">+</button>
-          </form>
+          <div class="sub-menu-title">
+            <h2 class="category-title" data-display-category-title>Work</h2>
+            <div class="task-remain" data-task-remain>2 tasks remain</div>
+          </div>
+          <div class="delete-container">
+            <button class="clear" data-clear-completed-tasks>
+              Clear completed tasks
+            </button>
+            <button class="delete" data-delete-whole-list>
+              Empty the list
+            </button>
+          </div>
+          <div class="sub-menu-settings">
+            <div class="view-options">change view</div>
+            <form class="new-task-form" data-new-task-form>
+              <input type="text" placeholder="new task" data-new-task-input />
+              <button class="btn btn-create-task">+</button>
+            </form>
+          </div>
         </div>
 
         <!-- card -->
-        <div class="tasks-container" data-tasks-container>
-          <div class="task-wrapper">
-            <div class="task-name">
-              <input type="checkbox" id="task-1" />
-              <label for="task-1">
-                <span class="custom-checkbox"></span>
-                Task 1
-              </label>
+        <div class="card">
+          <div class="tasks-container" data-tasks-container>
+            <div class="task-wrapper">
+              <div class="task-name">
+                <input type="checkbox" id="task-1" />
+                <label for="task-1">
+                  <span class="custom-checkbox"></span>
+                  Task 1
+                </label>
+              </div>
+            </div>
+            <div class="task-wrapper">
+              <div class="task-name">
+                <input type="checkbox" id="task-2" />
+                <label for="task-2">
+                  <span class="custom-checkbox"></span>
+                  Task 2
+                </label>
+              </div>
             </div>
           </div>
-
-          <div class="task-wrapper">
-            <div class="task-name">
-              <input type="checkbox" id="task-2" />
-              <label for="task-2">
-                <span class="custom-checkbox"></span>
-                Task 2
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <div class="delete-container">
-          <button class="clear" data-clear-completed-tasks>
-            Clear completed tasks
-          </button>
-          <button class="delete" data-delete-whole-list>
-            Delete whole list
-          </button>
         </div>
       </div>
     </div>
