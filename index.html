@@ -30,13 +30,25 @@
           />
           <button class="btn btn-create-category">+</button>
         </form>
-        <button class="delete-category" data-delete-category>Delete category</button>
+        <button class="delete-category" data-delete-category>
+          Delete category
+        </button>
       </aside>
 
       <!-- main -->
       <div class="main">
         <!-- nav bar -->
         <nav class="nav-bar">
+          <div class="search-bar">
+            <!-- <form class="search-bar" data-search-bar-form> -->
+              <input
+                type="text"
+                placeholder="search for task"
+                data-search-bar-input
+              />
+              <button class="btn btn-cancel-search" data-cancel-search>x</button>
+            <!-- </form> -->
+          </div>
           <div class="user-name">Username</div>
         </nav>
 
@@ -76,7 +88,9 @@
         </div>
 
         <div class="delete-container">
-          <button class="clear" data-clear-completed-tasks>Clear completed tasks</button>
+          <button class="clear" data-clear-completed-tasks>
+            Clear completed tasks
+          </button>
           <button class="delete" data-delete-whole-list>
             Delete whole list
           </button>

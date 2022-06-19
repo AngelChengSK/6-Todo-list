@@ -5,6 +5,9 @@ const categoriesContainer = document.querySelector(
 const newCategoryForm = document.querySelector('[data-new-category-form]');
 const newCategoryInput = document.querySelector('[data-new-category-input]');
 const deleteCategoryBtn = document.querySelector('[data-delete-category]');
+// const searchForm = document.querySelector('[data-search-bar-form]');
+const searchInput = document.querySelector('[data-search-bar-input]');
+const searchCancel = document.querySelector('[data-cancel-search]');
 const displayCategoryTitle = document.querySelector(
   '[data-display-category-title]'
 );
@@ -26,8 +29,8 @@ const LOCAL_STORAGE_CATEGORIES_KEY = 'todo.categoriesList';
 const LOCAL_STORAGE_SELECTED_CATEGORY_ID_KEY = 'todo.selectedCategoryId';
 let masterList =
   JSON.parse(localStorage.getItem(LOCAL_STORAGE_CATEGORIES_KEY)) || [];
-let selectedCategoryId = JSON.parse(localStorage.getItem(
-  LOCAL_STORAGE_SELECTED_CATEGORY_ID_KEY)
+let selectedCategoryId = JSON.parse(
+  localStorage.getItem(LOCAL_STORAGE_SELECTED_CATEGORY_ID_KEY)
 );
 
 //local storage: the key and value are always string, need to stringify when store, and parse when restore
@@ -74,21 +77,45 @@ tasksContainer.addEventListener('click', (e) => {
     // if input tag's id and label tag's for property have the same value, the two tags are linked up, when users click on the label tag(=the text), the input tag (=checkbox) will also be checked
     // otherwise, the input tag (=checkbox) will only be checked when users click on it directly
     const selectedTaskId = e.target.id;
-    const selectedCategory = masterList.find(
-      (category) => category.id === selectedCategoryId
-    );
-    const selectedTask = selectedCategory.tasks.find(
-      (task) => task.id === selectedTaskId
-    );
-    selectedTask.complete = e.target.checked;
-    save();
-    updateTaskRemain();
+    if (selectedCategoryId === null) {
+      const selectedCategory = masterList.find(category => category.tasks.some(task => task.id == selectedTaskId))
+      const selectedTask = selectedCategory.tasks.find(task => task.id == selectedTaskId)
+      selectedTask.complete = e.target.checked
+      save();
+      updateTaskRemain(selectedCategory);
+    } else {
+      // const selectedTaskId = e.target.id;
+      const selectedCategory = masterList.find(
+        (category) => category.id == selectedCategoryId
+      );
+      const selectedTask = selectedCategory.tasks.find(
+        (task) => task.id === selectedTaskId
+      );
+      selectedTask.complete = e.target.checked;
+      save();
+      updateTaskRemain(selectedCategory);
+    }
   }
+});
+
+//when typing in search bar
+searchInput.addEventListener('keyup', (e) => {
+  const searchString = searchInput.value;
+  searchTasks(searchString);
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    searchInput.value = '';
+  }
+});
+
+searchCancel.addEventListener('click', () => {
+  searchInput.value = '';
+  searchTasks('');
 });
 
 DashboardBtn.addEventListener('click', () => {
   selectedCategoryId = null;
-  saveAndRender()
+  saveAndRender();
 });
 deleteCategoryBtn.addEventListener('click', deleteCategory);
 clearCompletedTasksBtn.addEventListener('click', clearCompletedTasks);
@@ -133,19 +160,41 @@ function render() {
 
   if (selectedCategoryId === null) {
     const allTasks = masterList.map((category) => category.tasks).flat();
-    const allCategories = {tasks: allTasks};
-    renderTasks(allCategories)
-    displayCategoryTitle.innerText = "Dashboard";
+    const allCategories = { tasks: allTasks };
+    renderTasks(allCategories);
+    displayCategoryTitle.innerText = 'Dashboard';
     updateTaskRemain(allCategories);
   } else {
     const selectedCategory = masterList.find(
-      (category) => category.id == selectedCategoryId)
+      (category) => category.id == selectedCategoryId
+    );
     displayCategoryTitle.innerText = selectedCategory.categoryName;
     renderTasks(selectedCategory);
     updateTaskRemain(selectedCategory);
-  };
-    
   }
+}
+
+function searchTasks(searchString) {
+  if (selectedCategoryId === null) {
+    const allTasksArray = masterList.map((category) => category.tasks).flat();
+    const filteredTasksArray = allTasksArray.filter((task) =>
+      task.taskName.includes(searchString)
+    );
+    const filteredTasksObject = { tasks: filteredTasksArray };
+    clearElement(tasksContainer);
+    renderTasks(filteredTasksObject);
+  } else {
+    const selectedCategory = masterList.find(
+      (category) => category.id == selectedCategoryId
+    );
+    const filteredTasksArray = selectedCategory.tasks.filter((task) =>
+      task.taskName.includes(searchString)
+    );
+    const filteredTasksObject = { tasks: filteredTasksArray };
+    clearElement(tasksContainer);
+    renderTasks(filteredTasksObject);
+  }
+}
 
 //delete html element
 function clearElement(element) {
@@ -167,8 +216,8 @@ function renderCategories() {
   });
 }
 
-function renderTasks(Category) {
-  Category.tasks.forEach((task) => {
+function renderTasks(listObject) {
+  listObject.tasks.forEach((task) => {
     const newElement = document.importNode(taskTemplate.content, true);
     const inputTag = newElement.querySelector('input');
     inputTag.id = task.id;
@@ -200,6 +249,7 @@ function deleteCategory() {
   masterList = masterList.filter(
     (category) => category.id !== selectedCategoryId
   );
+  selectedCategoryId = null;
   saveAndRender();
 }
 
