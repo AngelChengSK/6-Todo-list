@@ -1,3 +1,4 @@
+//sidebar
 const DashboardBtn = document.querySelector('[data-dashboard]');
 const categoriesContainer = document.querySelector(
   '[data-categories-container]'
@@ -5,23 +6,33 @@ const categoriesContainer = document.querySelector(
 const newCategoryForm = document.querySelector('[data-new-category-form]');
 const newCategoryInput = document.querySelector('[data-new-category-input]');
 const deleteCategoryBtn = document.querySelector('[data-delete-category]');
-// const searchForm = document.querySelector('[data-search-bar-form]');
 const searchInput = document.querySelector('[data-search-bar-input]');
 const searchCancel = document.querySelector('[data-cancel-search]');
+
+//sub-menu
 const displayCategoryTitle = document.querySelector(
   '[data-display-category-title]'
 );
 const taskRemain = document.querySelector('[data-task-remain]');
-const newTaskForm = document.querySelector('[data-new-task-form]');
-const newTaskInput = document.querySelector('[data-new-task-input]');
-const tasksContainer = document.querySelector('[data-tasks-container]');
-const taskTemplate = document.querySelector('#task-template');
-
+const viewModulesBtn = document.querySelector('[data-view-modules]');
+const viewListsBtn = document.querySelector('[data-view-lists]');
 const deleteTaskIcon = document.querySelector('[data-delete-icon]');
 const clearCompletedTasksBtn = document.querySelector(
   '[data-clear-completed-tasks]'
 );
 const deleteWholeListBtn = document.querySelector('[data-delete-whole-list]');
+
+//new task inputs
+const tasksContainer = document.querySelector('[data-tasks-container]');
+const taskTemplate = document.querySelector('#task-template');
+const newTaskForm = document.querySelector('[data-new-task-form]');
+const newTaskName = document.querySelector('[data-new-task-name]'); //name
+const newTaskDescription = document.querySelector(
+  '[data-new-task-description]'
+);
+const newTaskDate = document.querySelector('[data-new-task-date]');
+const newTaskPriority = document.querySelectorAll('input[name="priority"]');
+const newTaskRemarks = document.querySelector('[data-new-task-remarks]');
 
 // localStorage.removeItem('todo.categoriesList')
 // localStorage.removeItem('todo.selectedCategoryId')
@@ -62,14 +73,28 @@ categoriesContainer.addEventListener('click', (e) => {
 newTaskForm.addEventListener('submit', (e) => {
   e.preventDefault();
 
-  if (newTaskInput.value === null || newTaskInput.value === '') return;
-  const newTaskName = newTaskInput.value;
-  const newTask = createTask(newTaskName);
+  if (newTaskName.value === null || newTaskName.value === '') return;
+
+  const newName = newTaskName.value;
+  const newDescription = newTaskDescription.value || '';
+  const newDueDate = newTaskDate.value || '';
+  const newRemarks = newTaskRemarks.value || '';
+  const newPriority = document.querySelector(
+    "input[type='radio'][name=priority]:checked"
+  ).value;
+
+  const newTask = createTask(
+    newName,
+    newDescription,
+    newDueDate,
+    newRemarks,
+    newPriority
+  );
   const selectedCategory = masterList.find(
     (category) => category.id == selectedCategoryId
   );
   selectedCategory.tasks.push(newTask);
-  newTaskInput.value = null;
+  newTaskName.value = null;
   saveAndRender();
 });
 
@@ -139,6 +164,7 @@ document.addEventListener('click', (e) => {
     dropdown.classList.remove('show');
   });
 });
+
 clearCompletedTasksBtn.addEventListener('click', clearCompletedTasks);
 deleteWholeListBtn.addEventListener('click', deleteWholeList);
 
@@ -150,10 +176,14 @@ function createCategory(name) {
   };
 }
 
-function createTask(name) {
+function createTask(name, description, date, priority, remarks) {
   return {
     id: Date.now().toString(),
     taskName: name,
+    description: description,
+    dueDate: date,
+    priority: priority,
+    remarks: remarks,
     complete: false
   };
 }
@@ -248,23 +278,44 @@ function renderTasks(listObject) {
     labelTag.append(task.taskName);
     tasksContainer.append(newElement);
   });
+
+  const taskWrapper = document.querySelectorAll('.task-wrapper');
+
+  viewListsBtn.addEventListener('click', () => {
+    const listView = tasksContainer.classList.contains('view-lists');
+
+    if (listView) return;
+    else {
+      tasksContainer.classList.remove('view-modules');
+      tasksContainer.classList.add('view-lists');
+      for (var i = 0; i < taskWrapper.length; i++) {
+        taskWrapper[i].classList.remove('view-modules');
+        taskWrapper[i].classList.add('view-lists');
+      }
+    }
+  });
+
+  viewModulesBtn.addEventListener('click', () => {
+    const modulesView = tasksContainer.classList.contains('view-modules');
+
+    if (modulesView) return;
+    else {
+      tasksContainer.classList.remove('view-lists');
+      tasksContainer.classList.add('view-modules');
+      for (var i = 0; i < taskWrapper.length; i++) {
+        taskWrapper[i].classList.remove('view-lists');
+        taskWrapper[i].classList.add('view-modules');
+      }
+    }
+  });
 }
 
 function updateTaskRemain(Category) {
-  // const selectedCategory = masterList.find(
-  //   (category) => category.id === selectedCategoryId
-  // );
   let taskNumRemain = Category.tasks.filter(
     (task) => task.complete === false
   ).length;
   taskRemain.innerText = `${taskNumRemain} tasks remains`;
 }
-
-// function renderAllTasks() {
-//   const allTasks = masterList.map((category) => category.tasks).flat();
-//   const allCategories = {tasks: allTasks};
-//   renderTasks(allCategories);
-// }
 
 function deleteCategory() {
   masterList = masterList.filter(

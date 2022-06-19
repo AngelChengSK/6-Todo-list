@@ -410,7 +410,7 @@ body {
 }
 
 /* view lists, didnot add class name in js yet */
-.task-wrapper {
+.task-wrapper.view-lists {
   height: 50px;
   background-color: white;
   border-radius: 5px;

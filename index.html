@@ -26,7 +26,6 @@
         </ul>
 
         <div class="sidebar-bottom">
-
           <!-- btn: add -->
           <div class="dropdown add-category-container" data-dropdown>
             <button class="dropdown-btn btn-add-category">
@@ -40,10 +39,7 @@
 
             <!-- sub-menu: add -->
             <div class="dropdown-menu new-category-form-container">
-              <form
-                class="new-category-form"
-                data-new-category-form
-              >
+              <form class="new-category-form" data-new-category-form>
                 <input
                   type="text"
                   class="add-category-input"
@@ -74,7 +70,6 @@
         <!-- nav bar -->
         <nav class="nav-bar">
           <div class="search-bar">
-            <!-- <form class="search-bar" data-search-bar-form> -->
             <input
               type="text"
               placeholder="search"
@@ -82,7 +77,6 @@
               data-search-bar-input
             />
             <button class="btn btn-cancel-search" data-cancel-search>⨉</button>
-            <!-- </form> -->
           </div>
           <div class="user-name">Username</div>
         </nav>
@@ -151,25 +145,49 @@
               <form class="dropdown-menu new-task-form" data-new-task-form>
                 <div class="form-row">
                   <label>Title:</label>
-                  <input type="text" data-new-task-input />
+                  <input type="text" data-new-task-name />
                 </div>
                 <div class="form-row">
                   <label>Description:</label>
-                  <input type="text" />
+                  <input type="text" data-new-task-description />
                 </div>
                 <div class="form-row">
                   <label for="">Due date:</label>
-                  <input type="date" />
+                  <input type="date" data-new-task-date />
                 </div>
                 <div class="form-row">
                   <label for="">Priority:</label>
-                  <button class="priority-high">High</button>
-                  <button class="priority-medium">Medium</button>
-                  <button class="priority-low">Low</button>
+                  <div class="priority-options" data-new-task-priority>
+                    <input
+                      type="radio"
+                      name="priority"
+                      id="prior-high"
+                      value="high"
+                      checked
+                      data-new-task-priority-high
+                    />
+                    <label for="prior-high">High</label>
+                    <input
+                      type="radio"
+                      name="priority"
+                      id="prior-medi"
+                      value="medium"
+                      data-new-task-priority-medium
+                    />
+                    <label for="prior-medi">Medium</label>
+                    <input
+                      type="radio"
+                      name="priority"
+                      id="prior-low"
+                      value="low"
+                      data-new-task-priority-low
+                    />
+                    <label for="prior-low">Low</label>
+                  </div>
                 </div>
                 <div class="form-row">
                   <label>Remarks</label>
-                  <input type="text" />
+                  <input type="text" data-new-task-remarks />
                 </div>
                 <button class="btn-create-task">Add task</button>
               </form>
@@ -179,8 +197,8 @@
 
         <!-- card -->
         <div class="card">
-          <div class="tasks-container view-lists" data-tasks-container>
-            <div class="task-wrapper">
+          <div class="tasks-container view-modules" data-tasks-container>
+            <!-- <div class="task-wrapper view-modules">
               <div class="task-name">
                 <input type="checkbox" id="task-1" />
                 <label for="task-1">
@@ -197,7 +215,7 @@
                   Task 2
                 </label>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -205,7 +223,7 @@
 
     <!-- task template -->
     <template id="task-template">
-      <div class="task-wrapper">
+      <div class="task-wrapper view-modules">
         <div class="task-name">
           <input type="checkbox" />
           <label>
