@@ -7,6 +7,7 @@
     <title>Todo list</title>
     <!-- <link rel="stylesheet" href="reset.css" /> -->
     <link rel="stylesheet" href="styles.css" />
+    <script src="https://kit.fontawesome.com/e871ab8982.js" crossorigin="anonymous"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap"
       rel="stylesheet"
@@ -214,6 +215,7 @@
                   <span class="custom-checkbox"></span>
                   Task 2
                 </label>
+                
               </div>
             </div> -->
           </div>
@@ -230,6 +232,17 @@
             <span class="custom-checkbox"></span>
           </label>
         </div>
+        <div class="description" contenteditable="true">description</div>
+        <div class="remarks">remarks</div>
+        <div class="date">date</div>
+        <div class="priority">high</div>
+        <div class="task-card-btn-container">
+            <button class="edit">
+                <i class="fa-regular fa-pen-to-square"></i>
+            </button>
+            <input type="button" value="save my edits" onclick="saveEdits()"/>
+        </div>
+        
       </div>
     </template>
   </body>

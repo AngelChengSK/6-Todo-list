@@ -90,9 +90,7 @@ newTaskForm.addEventListener('submit', (e) => {
     newRemarks,
     newPriority
   );
-  const selectedCategory = masterList.find(
-    (category) => category.id == selectedCategoryId
-  );
+  const selectedCategory = returnSelectedCategory();
   selectedCategory.tasks.push(newTask);
   newTaskName.value = null;
   saveAndRender();
@@ -103,17 +101,15 @@ tasksContainer.addEventListener('click', (e) => {
   if (e.target.tagName.toLowerCase() === 'input') {
     // if input tag's id and label tag's for property have the same value, the two tags are linked up, when users click on the label tag(=the text), the input tag (=checkbox) will also be checked
     // otherwise, the input tag (=checkbox) will only be checked when users click on it directly
-    const selectedTaskId = e.target.id;
+    // set
 
-    const selectedCategory = masterList.find((category) =>
-      category.tasks.some((task) => task.id == selectedTaskId)
-    );
-    const selectedTask = selectedCategory.tasks.find(
-      (task) => task.id == selectedTaskId
-    );
+    const taskId = e.target.id
+    const selectedTask = returnSelectedTask(taskId);
+    const selectedCategory = returnSelectedCategory(e)
     selectedTask.complete = e.target.checked;
-    save();
-    updateTaskRemain(selectedCategory);
+    saveAndRender();
+    // updateTaskRemain(selectedCategory);
+
   }
 });
 
@@ -216,9 +212,7 @@ function render() {
     displayCategoryTitle.innerText = 'Dashboard';
     updateTaskRemain(allCategories);
   } else {
-    const selectedCategory = masterList.find(
-      (category) => category.id == selectedCategoryId
-    );
+    const selectedCategory = returnSelectedCategory();
     displayCategoryTitle.innerText = selectedCategory.categoryName;
     renderTasks(selectedCategory);
     updateTaskRemain(selectedCategory);
@@ -235,9 +229,7 @@ function searchTasks(searchString) {
     clearElement(tasksContainer);
     renderTasks(filteredTasksObject);
   } else {
-    const selectedCategory = masterList.find(
-      (category) => category.id == selectedCategoryId
-    );
+    const selectedCategory = returnSelectedCategory();
     const filteredTasksArray = selectedCategory.tasks.filter((task) =>
       task.taskName.includes(searchString)
     );
@@ -270,12 +262,27 @@ function renderCategories() {
 function renderTasks(listObject) {
   listObject.tasks.forEach((task) => {
     const newElement = document.importNode(taskTemplate.content, true);
+
     const inputTag = newElement.querySelector('input');
     inputTag.id = task.id;
     inputTag.checked = task.complete;
+
     const labelTag = newElement.querySelector('label');
     labelTag.htmlFor = inputTag.id;
     labelTag.append(task.taskName);
+
+    const descriptionDiv = newElement.querySelector('.description');
+    descriptionDiv.innerText = task.description;
+
+    const remarksDiv = newElement.querySelector('.remarks');
+    remarksDiv.innerText = task.remarks;
+
+    const dateDiv = newElement.querySelector('.date');
+    dateDiv.innerText = task.dueDate;
+
+    const priorityDiv = newElement.querySelector('.priority');
+    priorityDiv.innerText = task.priority;
+
     tasksContainer.append(newElement);
   });
 
@@ -326,9 +333,11 @@ function deleteCategory() {
 }
 
 function clearCompletedTasks() {
-  let selectedCategory = masterList.find(
-    (category) => category.id == selectedCategoryId
-  );
+  if (selectedCategoryId === null) {
+    setSelectedCategoryId();
+  }
+
+  const selectedCategory = returnSelectedCategory();
   selectedCategory.tasks = selectedCategory.tasks.filter(
     (task) => task.complete === false
   );
@@ -336,12 +345,46 @@ function clearCompletedTasks() {
 }
 
 function deleteWholeList() {
-  const selectedCategory = masterList.find(
-    (category) => category.id == selectedCategoryId
-  );
+  const selectedCategory = returnSelectedCategory();
   selectedCategory.tasks = [];
   saveAndRender();
 }
 
+function saveEdits() {
+  var editableElement = document.querySelector('.description');
+
+  //get the edited element content
+  var userVersion = editableElemnt.innerHTML;
+
+  //save the content to local storage
+  // localStorage.userEdits = userVersion;
+
+  //write a confirmation to the user
+  // document.getElementById("update").innerHTML="Edits saved!";
+}
+
+//when selectedCategoryId !== null
+function returnSelectedCategory() {
+  return masterList.find((category) => category.id == selectedCategoryId);
+}
+
+function returnSelectedTask(e) {
+  const selectedCategory = returnSelectedCategory();
+  return selectedCategory.tasks.find((task) => task.id == e);
+}
+
+//get the id of selected category for saving changes made to tasks from dashboard 
+//value of global variable, selectedCategoryId will still equal to null
+
+//return selected category without rewriting value of global variable, selectedCategoryId
+function returnSelectedCategory(e) {
+  // const selectedTaskId = eTargetId;
+  const selectedCategory = masterList.find((category) =>
+    category.tasks.some((task) => task.id == e.target.id)
+  );
+  const idOfSelectedCategory = selectedCategory.id
+  return masterList.find((category) => category.id == idOfSelectedCategory);
+}
 //to load the data from local storage when refresh
 render();
+
