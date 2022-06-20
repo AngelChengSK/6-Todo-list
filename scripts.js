@@ -26,7 +26,8 @@ const deleteWholeListBtn = document.querySelector('[data-delete-whole-list]');
 const tasksContainer = document.querySelector('[data-tasks-container]');
 const taskTemplate = document.querySelector('#task-template');
 const newTaskForm = document.querySelector('[data-new-task-form]');
-const newTaskName = document.querySelector('[data-new-task-name]'); //name
+const newTaskCategory = document.querySelector('[data-new-task-category]'); 
+const newTaskName = document.querySelector('[data-new-task-name]'); 
 const newTaskDescription = document.querySelector(
   '[data-new-task-description]'
 );
@@ -35,19 +36,21 @@ const newTaskPriority = document.querySelectorAll('input[name="priority"]');
 const newTaskRemarks = document.querySelector('[data-new-task-remarks]');
 const saveEditTask = document.querySelector('[data-save-edit-task]');
 
-
-
 // localStorage.removeItem('todo.categoriesList')
 // localStorage.removeItem('todo.selectedCategoryId')
 
 //variables
 const LOCAL_STORAGE_CATEGORIES_KEY = 'todo.categoriesList';
 const LOCAL_STORAGE_SELECTED_CATEGORY_ID_KEY = 'todo.selectedCategoryId';
+const LOCAL_STORAGE_VIEW_PREFERENCE = 'todo.viewPreference';
+
 let masterList =
   JSON.parse(localStorage.getItem(LOCAL_STORAGE_CATEGORIES_KEY)) || [];
 let selectedCategoryId = JSON.parse(
   localStorage.getItem(LOCAL_STORAGE_SELECTED_CATEGORY_ID_KEY)
 );
+let viewPreference =localStorage.getItem(LOCAL_STORAGE_VIEW_PREFERENCE) ||
+  'view-modules';
 
 //local storage: the key and value are always string, need to stringify when store, and parse when restore
 
@@ -68,6 +71,8 @@ newCategoryForm.addEventListener('submit', (e) => {
 categoriesContainer.addEventListener('click', (e) => {
   if (e.target.tagName.toLowerCase() === 'li') {
     selectedCategoryId = e.target.dataset.categoryId;
+
+    newTaskCategory.value = returnSelectedCategory().categoryName;
     saveAndRender();
   }
 });
@@ -90,18 +95,24 @@ newTaskForm.addEventListener('submit', (e) => {
     newName,
     newDescription,
     newDueDate,
-    newRemarks,
-    newPriority
+    newPriority,
+    newRemarks
   );
   const selectedCategory = returnSelectedCategory();
   selectedCategory.tasks.push(newTask);
   newTaskName.value = null;
+  newTaskDescription.value = null;
+  newTaskDate.value = null;
+  newTaskRemarks.value = null;
   saveAndRender();
 });
 
 //when a task is selected
 tasksContainer.addEventListener('click', (e) => {
-  if (e.target.tagName.toLowerCase() === 'input' && e.target.getAttribute('type') === 'checkbox') {
+  if (
+    e.target.tagName.toLowerCase() === 'input' &&
+    e.target.getAttribute('type') === 'checkbox'
+  ) {
     // if input tag's id and label tag's for property have the same value, the two tags are linked up, when users click on the label tag(=the text), the input tag (=checkbox) will also be checked
     // otherwise, the input tag (=checkbox) will only be checked when users click on it directly
     const selectedTaskId = e.target.id;
@@ -114,11 +125,11 @@ tasksContainer.addEventListener('click', (e) => {
     );
     selectedTask.complete = e.target.checked;
     saveAndRender();
-    // updateTaskRemain(selectedCategory);
   }
 
   if (e.target.hasAttribute('data-save-edit-task')) {
-    const selectedTaskId = e.target.id;
+    const selectedTaskId = e.target.id.replace(/[^0-9]/g, '');
+
     const selectedCategory = masterList.find((category) =>
       category.tasks.some((task) => task.id == selectedTaskId)
     );
@@ -126,9 +137,15 @@ tasksContainer.addEventListener('click', (e) => {
       (task) => task.id == selectedTaskId
     );
 
-    const newVersionDescription = document.querySelector(`#desc${ selectedTaskId }`).innerText;
-    
-    selectedTask.description = newVersionDescription;
+    const newDescription = document.querySelector(
+      `#desc${selectedTaskId}`
+    ).innerText;
+    const newRemarks = document.querySelector(
+      `#rema${selectedTaskId}`
+    ).innerText;
+
+    selectedTask.description = newDescription;
+    selectedTask.remarks = newRemarks;
     saveAndRender();
   }
 });
@@ -218,6 +235,7 @@ function save() {
     LOCAL_STORAGE_SELECTED_CATEGORY_ID_KEY,
     selectedCategoryId
   );
+  localStorage.setItem(LOCAL_STORAGE_VIEW_PREFERENCE, viewPreference);
 }
 
 function render() {
@@ -232,7 +250,7 @@ function render() {
     displayCategoryTitle.innerText = 'Dashboard';
     updateTaskRemain(allCategories);
   } else {
-    const selectedCategory = returnSelectedCategory()
+    const selectedCategory = returnSelectedCategory();
     displayCategoryTitle.innerText = selectedCategory.categoryName;
     renderTasks(selectedCategory);
     updateTaskRemain(selectedCategory);
@@ -280,6 +298,8 @@ function renderCategories() {
 }
 
 function renderTasks(listObject) {
+  tasksContainer.classList.add(viewPreference)
+
   listObject.tasks.forEach((task) => {
     const newElement = document.importNode(taskTemplate.content, true);
 
@@ -292,54 +312,65 @@ function renderTasks(listObject) {
     labelTag.append(task.taskName);
 
     const descriptionDiv = newElement.querySelector('.description');
-    descriptionDiv.id = "desc" + task.id;
+    descriptionDiv.id = 'desc' + task.id;
     descriptionDiv.innerText = task.description;
 
     const remarksDiv = newElement.querySelector('.remarks');
+    remarksDiv.id = 'rema' + task.id;
     remarksDiv.innerText = task.remarks;
 
     const dateDiv = newElement.querySelector('.date');
+    dateDiv.id = 'date' + task.id;
     dateDiv.innerText = task.dueDate;
 
     const priorityDiv = newElement.querySelector('.priority');
+    priorityDiv.id = 'prio' + task.id;
     priorityDiv.innerText = task.priority;
 
     const saveEdits = newElement.querySelector('[data-save-edit-task]');
-    saveEdits.id = task.id;
+    saveEdits.id = 'save' + task.id;
+
+    const taskWrapper = newElement.querySelector('.task-wrapper');
+    taskWrapper.classList.add(viewPreference)
+    if (checkbox.checked) {
+      taskWrapper.style.borderColor = 'rgba(222,220,238,1)';
+    } else if (task.priority === 'high') {
+      taskWrapper.style.borderColor = 'rgba(243,129,129,1)';
+    } else if (task.priority === 'medium') {
+      taskWrapper.style.borderColor = 'rgba(252,227,138,1)';
+    } else {
+      taskWrapper.style.borderColor = 'rgba(149,225,211,1)';
+    }
 
     tasksContainer.append(newElement);
   });
 
-  const taskWrapper = document.querySelectorAll('.task-wrapper');
-  // const cardBtnsContainer = document.querySelector('[data-card-btns-container]');
-
   viewListsBtn.addEventListener('click', () => {
-    const listView = tasksContainer.classList.contains('view-lists');
-
-    if (listView) return;
+    if (viewPreference === 'view-lists') return;
     else {
-      tasksContainer.classList.remove('view-modules');
-      tasksContainer.classList.add('view-lists');
-      for (var i = 0; i < taskWrapper.length; i++) {
-        taskWrapper[i].classList.remove('view-modules');
-        taskWrapper[i].classList.add('view-lists');
-      }
+      changeView();
+      viewPreference = 'view-lists';
     }
   });
 
   viewModulesBtn.addEventListener('click', () => {
-    const modulesView = tasksContainer.classList.contains('view-modules');
-
-    if (modulesView) return;
+    if (viewPreference === 'view-modules') return;
     else {
-      tasksContainer.classList.remove('view-lists');
-      tasksContainer.classList.add('view-modules');
-      for (var i = 0; i < taskWrapper.length; i++) {
-        taskWrapper[i].classList.remove('view-lists');
-        taskWrapper[i].classList.add('view-modules');
-      }
+      changeView();
+      viewPreference = 'view-modules';
     }
   });
+}
+
+function changeView() {
+  const taskWrapper = document.querySelectorAll('.task-wrapper');
+
+  tasksContainer.classList.toggle('view-modules');
+  tasksContainer.classList.toggle('view-lists');
+  for (var i = 0; i < taskWrapper.length; i++) {
+    taskWrapper[i].classList.toggle('view-modules');
+    taskWrapper[i].classList.toggle('view-lists');
+  }
 }
 
 function updateTaskRemain(Category) {
@@ -374,46 +405,6 @@ function deleteWholeList() {
   selectedCategory.tasks = [];
   saveAndRender();
 }
-
-// function saveEdits() {
-//   const newVersionDescription = document.querySelector('.description');
-
-//   //get the edited element content
-//   var userVersion = editableElemnt.innerHTML;
-
-  
-// }
-
-
-
-// cardBtnsContainer.addEventListener('click', (e) => {
-//   if (e.target.tagName.toLowerCase() === 'button') {
-//     const selectedTaskId = e.target.id;
-//     const selectedCategory = masterList.find((category) =>
-//       category.tasks.some((task) => task.id == selectedTaskId)
-//     );
-//     const selectedTask = selectedCategory.tasks.find(
-//       (task) => task.id == selectedTaskId
-//     );
-
-//     const newVersionDescription = document.getElementById(e.target.id).innerText;
-    
-//     selectedTask.description = newVersionDescription;
-//     saveAndRender();
-
-
-//   }
-    
-//     updateTaskRemain(selectedCategory);
-//   }
-// );
-
-
-
-
-
-
-
 
 //for selectedCategoryId !== null
 function returnSelectedCategory() {
