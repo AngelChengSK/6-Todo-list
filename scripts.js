@@ -101,15 +101,17 @@ tasksContainer.addEventListener('click', (e) => {
   if (e.target.tagName.toLowerCase() === 'input') {
     // if input tag's id and label tag's for property have the same value, the two tags are linked up, when users click on the label tag(=the text), the input tag (=checkbox) will also be checked
     // otherwise, the input tag (=checkbox) will only be checked when users click on it directly
-    // set
+    const selectedTaskId = e.target.id;
 
-    const taskId = e.target.id
-    const selectedTask = returnSelectedTask(taskId);
-    const selectedCategory = returnSelectedCategory(e)
+    const selectedCategory = masterList.find((category) =>
+      category.tasks.some((task) => task.id == selectedTaskId)
+    );
+    const selectedTask = selectedCategory.tasks.find(
+      (task) => task.id == selectedTaskId
+    );
     selectedTask.complete = e.target.checked;
     saveAndRender();
     // updateTaskRemain(selectedCategory);
-
   }
 });
 
@@ -212,7 +214,7 @@ function render() {
     displayCategoryTitle.innerText = 'Dashboard';
     updateTaskRemain(allCategories);
   } else {
-    const selectedCategory = returnSelectedCategory();
+    const selectedCategory = returnSelectedCategory()
     displayCategoryTitle.innerText = selectedCategory.categoryName;
     renderTasks(selectedCategory);
     updateTaskRemain(selectedCategory);
@@ -373,18 +375,12 @@ function returnSelectedTask(e) {
   return selectedCategory.tasks.find((task) => task.id == e);
 }
 
-//get the id of selected category for saving changes made to tasks from dashboard 
-//value of global variable, selectedCategoryId will still equal to null
-
 //return selected category without rewriting value of global variable, selectedCategoryId
-function returnSelectedCategory(e) {
-  // const selectedTaskId = eTargetId;
-  const selectedCategory = masterList.find((category) =>
-    category.tasks.some((task) => task.id == e.target.id)
-  );
-  const idOfSelectedCategory = selectedCategory.id
-  return masterList.find((category) => category.id == idOfSelectedCategory);
-}
+// function returnSelectedCategory() {
+//   return masterList.find((category) =>
+//     category.tasks.some((task) => task.id == selectedCategoryId)
+//   );
+// }
+
 //to load the data from local storage when refresh
 render();
-
