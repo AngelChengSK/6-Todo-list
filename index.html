@@ -7,7 +7,10 @@
     <title>Todo list</title>
     <!-- <link rel="stylesheet" href="reset.css" /> -->
     <link rel="stylesheet" href="styles.css" />
-    <script src="https://kit.fontawesome.com/e871ab8982.js" crossorigin="anonymous"></script>
+    <script
+      src="https://kit.fontawesome.com/e871ab8982.js"
+      crossorigin="anonymous"
+    ></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap"
       rel="stylesheet"
@@ -31,7 +34,7 @@
           <div class="dropdown add-category-container" data-dropdown>
             <button class="dropdown-btn btn-add-category">
               <img
-                src="/pictures/add-new-category.PNG"
+                src="pictures/add-new-category.PNG"
                 alt=""
                 style="width: 100%; height: 100%"
                 data-dropdown-btn
@@ -56,7 +59,7 @@
           <div class="detele-category-container">
             <button class="btn-delete-category" data-delete-category>
               <img
-                src="/pictures/delete.PNG"
+                src="pictures/delete.PNG"
                 alt=""
                 style="width: 100%; height: 100%"
               />
@@ -95,7 +98,7 @@
               <div class="dropdown-btn btn-trash-can-container">
                 <button class="btn-trash-can">
                   <img
-                    src="/pictures/trash-can.PNG"
+                    src="pictures/trash-can.PNG"
                     style="width: 100%; height: 100%"
                     data-dropdown-btn
                   />
@@ -116,7 +119,7 @@
             <div class="btn-view-modules-container" data-view-modules>
               <button class="btn-view-modules">
                 <img
-                  src="/pictures/view-modules.PNG"
+                  src="pictures/view-modules.PNG"
                   style="width: 100%; height: 100%"
                 />
               </button>
@@ -126,7 +129,7 @@
             <div class="btn-view-lists-container" data-view-lists>
               <button class="btn-view-lists">
                 <img
-                  src="/pictures/view-lists.PNG"
+                  src="pictures/view-lists.PNG"
                   style="width: 100%; height: 100%"
                 />
               </button>
@@ -136,7 +139,7 @@
             <div class="dropdown add-task-container" data-dropdown>
               <button class="dropdown-btn btn-add-task">
                 <img
-                  src="/pictures/add-new-task.PNG"
+                  src="pictures/add-new-task.PNG"
                   alt=""
                   data-dropdown-btn
                 />
@@ -227,7 +230,7 @@
     <template id="task-template">
       <div class="task-wrapper view-modules">
         <div class="task-name">
-          <input type="checkbox" />
+          <input type="checkbox"/>
           <label>
             <span class="custom-checkbox"></span>
           </label>
@@ -236,13 +239,17 @@
         <div class="remarks">remarks</div>
         <div class="date">date</div>
         <div class="priority">high</div>
-        <div class="task-card-btn-container">
-            <button class="edit">
-                <i class="fa-regular fa-pen-to-square"></i>
-            </button>
-            <input type="button" value="save my edits" onclick="saveEdits()"/>
+        <div class="card-btns-container" data-card-btns-container>
+          <button class="edit">
+            <i class="fa-regular fa-pen-to-square"></i>
+          </button>
+          <input
+            type="button"
+            value="save"
+            data-save-edit-task
+            "
+          />
         </div>
-        
       </div>
     </template>
   </body>
