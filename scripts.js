@@ -1,3 +1,11 @@
+//header
+const menuBtn = document.querySelector('[data-menu-btn]');
+const sidebar = document.querySelector('[data-sidebar]');
+const searchInput = document.querySelector('[data-search-bar-input]');
+const searchCancel = document.querySelector('[data-cancel-search]');
+const profilePicInput = document.querySelector("[data-profile-pic-input]");
+const profilePicContainer = document.querySelector("[data-profile-pic]")
+
 //sidebar
 const DashboardBtn = document.querySelector('[data-dashboard]');
 const categoriesContainer = document.querySelector(
@@ -6,8 +14,6 @@ const categoriesContainer = document.querySelector(
 const newCategoryForm = document.querySelector('[data-new-category-form]');
 const newCategoryInput = document.querySelector('[data-new-category-input]');
 const deleteCategoryBtn = document.querySelector('[data-delete-category]');
-const searchInput = document.querySelector('[data-search-bar-input]');
-const searchCancel = document.querySelector('[data-cancel-search]');
 
 //sub-menu
 const displayCategoryTitle = document.querySelector(
@@ -37,12 +43,13 @@ const newTaskRemarks = document.querySelector('[data-new-task-remarks]');
 const saveEditTask = document.querySelector('[data-save-edit-task]');
 
 // localStorage.removeItem('todo.categoriesList')
-// localStorage.removeItem('todo.selectedCategoryId')
+// localStorage.removeItem('todo.profilePic')
 
 //variables
 const LOCAL_STORAGE_CATEGORIES_KEY = 'todo.categoriesList';
 const LOCAL_STORAGE_SELECTED_CATEGORY_ID_KEY = 'todo.selectedCategoryId';
 const LOCAL_STORAGE_VIEW_PREFERENCE = 'todo.viewPreference';
+const LOCAL_STORAGE_PROFILE_PIC_KEY = 'todo.profilePic';
 
 let masterList =
   JSON.parse(localStorage.getItem(LOCAL_STORAGE_CATEGORIES_KEY)) || [];
@@ -51,8 +58,28 @@ let selectedCategoryId = JSON.parse(
 );
 let viewPreference =localStorage.getItem(LOCAL_STORAGE_VIEW_PREFERENCE) ||
   'view-modules';
+let profilePic = localStorage.getItem(LOCAL_STORAGE_PROFILE_PIC_KEY) 
 
-//local storage: the key and value are always string, need to stringify when store, and parse when restore
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (profilePic) {
+    profilePicContainer.style.backgroundImage = `url(${profilePic})`;
+  }
+})
+
+menuBtn.addEventListener('click', () => {
+  sidebar.classList.toggle('open')
+})
+
+profilePicInput.addEventListener("change", function() {
+  const reader = new FileReader();
+  reader.addEventListener("load", () => {
+    const uploadedProfilePic = reader.result;
+    profilePicContainer.style.backgroundImage = `url(${uploadedProfilePic})`;
+    localStorage.setItem(LOCAL_STORAGE_PROFILE_PIC_KEY, reader.result)
+  });
+  reader.readAsDataURL(this.files[0]);
+});
 
 //when new category name is submitted
 newCategoryForm.addEventListener('submit', (e) => {
@@ -236,6 +263,7 @@ function save() {
     selectedCategoryId
   );
   localStorage.setItem(LOCAL_STORAGE_VIEW_PREFERENCE, viewPreference);
+
 }
 
 function render() {
@@ -287,7 +315,7 @@ function clearElement(element) {
 function renderCategories() {
   masterList.forEach((item) => {
     const newElement = document.createElement('li');
-    newElement.classList.add('category-item');
+    newElement.classList.add('category-list-item');
     newElement.innerText = item.categoryName;
     newElement.dataset.categoryId = item.id;
     if (selectedCategoryId == item.id) {
