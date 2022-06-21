@@ -3,8 +3,8 @@ const menuBtn = document.querySelector('[data-menu-btn]');
 const sidebar = document.querySelector('[data-sidebar]');
 const searchInput = document.querySelector('[data-search-bar-input]');
 const searchCancel = document.querySelector('[data-cancel-search]');
-const profilePicInput = document.querySelector("[data-profile-pic-input]");
-const profilePicContainer = document.querySelector("[data-profile-pic]")
+const profilePicInput = document.querySelector('[data-profile-pic-input]');
+const profilePicContainer = document.querySelector('[data-profile-pic]');
 
 //sidebar
 const DashboardBtn = document.querySelector('[data-dashboard]');
@@ -32,14 +32,15 @@ const deleteWholeListBtn = document.querySelector('[data-delete-whole-list]');
 const tasksContainer = document.querySelector('[data-tasks-container]');
 const taskTemplate = document.querySelector('#task-template');
 const newTaskForm = document.querySelector('[data-new-task-form]');
-const newTaskCategory = document.querySelector('[data-new-task-category]'); 
-const newTaskName = document.querySelector('[data-new-task-name]'); 
+const newTaskCategory = document.querySelector('[data-new-task-category]');
+const newTaskName = document.querySelector('[data-new-task-name]');
 const newTaskDescription = document.querySelector(
   '[data-new-task-description]'
 );
 const newTaskDate = document.querySelector('[data-new-task-date]');
 const newTaskPriority = document.querySelectorAll('input[name="priority"]');
 const newTaskRemarks = document.querySelector('[data-new-task-remarks]');
+const newTaskErrorMsg = document.querySelector('[data-new-task-error-msg]');
 const saveEditTask = document.querySelector('[data-save-edit-task]');
 
 // localStorage.removeItem('todo.categoriesList')
@@ -56,27 +57,26 @@ let masterList =
 let selectedCategoryId = JSON.parse(
   localStorage.getItem(LOCAL_STORAGE_SELECTED_CATEGORY_ID_KEY)
 );
-let viewPreference =localStorage.getItem(LOCAL_STORAGE_VIEW_PREFERENCE) ||
-  'view-modules';
-let profilePic = localStorage.getItem(LOCAL_STORAGE_PROFILE_PIC_KEY) 
+let viewPreference =
+  localStorage.getItem(LOCAL_STORAGE_VIEW_PREFERENCE) || 'view-modules';
+let profilePic = localStorage.getItem(LOCAL_STORAGE_PROFILE_PIC_KEY);
 
-
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
   if (profilePic) {
     profilePicContainer.style.backgroundImage = `url(${profilePic})`;
   }
-})
+});
 
 menuBtn.addEventListener('click', () => {
-  sidebar.classList.toggle('open')
-})
+  sidebar.classList.toggle('open');
+});
 
-profilePicInput.addEventListener("change", function() {
+profilePicInput.addEventListener('change', function () {
   const reader = new FileReader();
-  reader.addEventListener("load", () => {
+  reader.addEventListener('load', () => {
     const uploadedProfilePic = reader.result;
     profilePicContainer.style.backgroundImage = `url(${uploadedProfilePic})`;
-    localStorage.setItem(LOCAL_STORAGE_PROFILE_PIC_KEY, reader.result)
+    localStorage.setItem(LOCAL_STORAGE_PROFILE_PIC_KEY, reader.result);
   });
   reader.readAsDataURL(this.files[0]);
 });
@@ -107,13 +107,22 @@ categoriesContainer.addEventListener('click', (e) => {
 //when new task is submitted
 newTaskForm.addEventListener('submit', (e) => {
   e.preventDefault();
+  const selectedCategory = masterList.find(item => item.categoryName === newTaskCategory.value);
 
-  if (newTaskName.value === null || newTaskName.value === '') return;
+  if (selectedCategory === undefined) {
+    newTaskErrorMsg.innerText = "Please enter valid category name";
+    return
+  }
+  
+  if (newTaskName.value === null || newTaskName.value === '') {
+    newTaskErrorMsg.innerText = "Please enter task name";
+    return;
+  }
 
   const newName = newTaskName.value;
-  const newDescription = newTaskDescription.value || '';
+  const newDescription = newTaskDescription.value || '...';
   const newDueDate = newTaskDate.value || '';
-  const newRemarks = newTaskRemarks.value || '';
+  const newRemarks = newTaskRemarks.value || 'Remarks';
   const newPriority = document.querySelector(
     "input[type='radio'][name=priority]:checked"
   ).value;
@@ -125,45 +134,61 @@ newTaskForm.addEventListener('submit', (e) => {
     newPriority,
     newRemarks
   );
-  const selectedCategory = returnSelectedCategory();
-  selectedCategory.tasks.push(newTask);
-  newTaskName.value = null;
-  newTaskDescription.value = null;
-  newTaskDate.value = null;
-  newTaskRemarks.value = null;
-  saveAndRender();
-});
+  // const selectedCategory = returnSelectedCategory();
+
+    selectedCategory.tasks.push(newTask);
+    newTaskName.value = null;
+    newTaskDescription.value = null;
+    newTaskDate.value = null;
+    newTaskRemarks.value = null;
+    saveAndRender();
+
+    
+  }
+);
 
 //when a task is selected
 tasksContainer.addEventListener('click', (e) => {
+  const selectedTaskId = e.target.id.replace(/[^0-9]/g, '');
+  
+  if (selectedTaskId === "") return;
+
+  const selectedCategory = masterList.find((category) =>
+    category.tasks.some((task) => task.id == selectedTaskId)
+  );
+  const selectedTask = selectedCategory.tasks.find(
+    (task) => task.id == selectedTaskId
+  );
+
   if (
     e.target.tagName.toLowerCase() === 'input' &&
     e.target.getAttribute('type') === 'checkbox'
   ) {
-    // if input tag's id and label tag's for property have the same value, the two tags are linked up, when users click on the label tag(=the text), the input tag (=checkbox) will also be checked
-    // otherwise, the input tag (=checkbox) will only be checked when users click on it directly
-    const selectedTaskId = e.target.id;
-
-    const selectedCategory = masterList.find((category) =>
-      category.tasks.some((task) => task.id == selectedTaskId)
-    );
-    const selectedTask = selectedCategory.tasks.find(
-      (task) => task.id == selectedTaskId
-    );
     selectedTask.complete = e.target.checked;
     saveAndRender();
   }
 
+  if (e.target.hasAttribute('data-edit-task')) {
+    document
+      .querySelector(`#desc${selectedTaskId}`)
+      .setAttribute('contenteditable', true);
+    document
+      .querySelector(`#rema${selectedTaskId}`)
+      .setAttribute('contenteditable', true);
+
+    document.querySelector(`#desc${selectedTaskId}`).style.border =
+      '1px solid lightgrey';
+    document.querySelector(`#rema${selectedTaskId}`).style.border =
+      '1px solid lightgrey';
+    
+      document.querySelector(`#editBtns${selectedTaskId}`).classList.add('show')
+  }
+
+  if (e.target.hasAttribute('data-cancel-edit-task')) {
+    render();
+  }
+
   if (e.target.hasAttribute('data-save-edit-task')) {
-    const selectedTaskId = e.target.id.replace(/[^0-9]/g, '');
-
-    const selectedCategory = masterList.find((category) =>
-      category.tasks.some((task) => task.id == selectedTaskId)
-    );
-    const selectedTask = selectedCategory.tasks.find(
-      (task) => task.id == selectedTaskId
-    );
-
     const newDescription = document.querySelector(
       `#desc${selectedTaskId}`
     ).innerText;
@@ -175,6 +200,14 @@ tasksContainer.addEventListener('click', (e) => {
     selectedTask.remarks = newRemarks;
     saveAndRender();
   }
+
+  if (e.target.hasAttribute('data-delete-task')) {
+    selectedCategory.tasks = selectedCategory.tasks.filter(
+      (task) => task.id !== selectedTaskId
+    );
+    saveAndRender();
+  }
+  
 });
 
 //when typing in search bar
@@ -263,7 +296,6 @@ function save() {
     selectedCategoryId
   );
   localStorage.setItem(LOCAL_STORAGE_VIEW_PREFERENCE, viewPreference);
-
 }
 
 function render() {
@@ -326,7 +358,7 @@ function renderCategories() {
 }
 
 function renderTasks(listObject) {
-  tasksContainer.classList.add(viewPreference)
+  tasksContainer.classList.add(viewPreference);
 
   listObject.tasks.forEach((task) => {
     const newElement = document.importNode(taskTemplate.content, true);
@@ -355,11 +387,24 @@ function renderTasks(listObject) {
     priorityDiv.id = 'prio' + task.id;
     priorityDiv.innerText = task.priority;
 
+    const Edit = newElement.querySelector('[data-edit-task]');
+    Edit.id = 'edit' + task.id;
+
+    const editBtnsContainer = newElement.querySelector('[data-edit-btns-container]')
+    editBtnsContainer.id = 'editBtns'+ task.id
+
     const saveEdits = newElement.querySelector('[data-save-edit-task]');
     saveEdits.id = 'save' + task.id;
 
+    const cancelEdits = newElement.querySelector('[data-cancel-edit-task]');
+    cancelEdits.id = 'canc' + task.id;
+
+    const deleteThis = newElement.querySelector('[data-delete-task]');
+    deleteThis.id = 'dele' + task.id;
+
     const taskWrapper = newElement.querySelector('.task-wrapper');
-    taskWrapper.classList.add(viewPreference)
+    taskWrapper.classList.add(viewPreference);
+
     if (checkbox.checked) {
       taskWrapper.style.borderColor = 'rgba(222,220,238,1)';
     } else if (task.priority === 'high') {

@@ -7,10 +7,10 @@
     <title>Todo list</title>
     <!-- <link rel="stylesheet" href="reset.css" /> -->
     <link rel="stylesheet" href="styles.css" />
-    <script
+    <!-- <script
       src="https://kit.fontawesome.com/e871ab8982.js"
       crossorigin="anonymous"
-    ></script>
+    ></script> -->
     <link
       href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap"
       rel="stylesheet"
@@ -38,11 +38,11 @@
           <button class="btn btn-cancel-search" data-cancel-search>⨉</button>
         </div>
         <input
-        type="file"
-        id="profile-pic-upload"
-        accept="image/jpeg, image/png, image/jpg"
-        data-profile-pic-input
-      />
+          type="file"
+          id="profile-pic-upload"
+          accept="image/jpeg, image/png, image/jpg"
+          data-profile-pic-input
+        />
         <div class="user-name">Username</div>
       </header>
 
@@ -51,9 +51,7 @@
         <!-- sidebar -->
         <aside class="sidebar open" data-sidebar>
           <div class="sidebar-top">
-            <div id="profile-pic" data-profile-pic>
-              
-            </div>
+            <div id="profile-pic" data-profile-pic></div>
           </div>
 
           <div class="sidebar-middle">
@@ -104,6 +102,7 @@
                     type="text"
                     class="add-category-input"
                     placeholder="New category"
+                    maxlength="20"
                     data-new-category-input
                   />
                   <button class="btn-create-category">+</button>
@@ -185,31 +184,31 @@
                 </button>
                 <!-- sub-menu: add -->
                 <form class="dropdown-menu new-task-form" data-new-task-form>
+                  <!-- <div class="new-task-form-title">Add new task</div> -->
                   <div class="form-row">
-                    <label>Category:</label>
+                    <label>Category *</label>
                     <input type="text" data-new-task-category />
                   </div>
                   <div class="form-row">
-                    <label>Title:</label>
-                    <input type="text" data-new-task-name />
+                    <label>Title *</label>
+                    <input type="text" data-new-task-name maxlength="16" />
                   </div>
                   <div class="form-row">
-                    <label>Description:</label>
+                    <label>Description</label>
                     <input type="text" data-new-task-description />
                   </div>
                   <div class="form-row">
-                    <label for="">Due date:</label>
+                    <label>Due date</label>
                     <input type="date" data-new-task-date />
                   </div>
                   <div class="form-row">
-                    <label for="">Priority:</label>
+                    <label>Priority</label>
                     <div class="priority-options" data-new-task-priority>
                       <input
                         type="radio"
                         name="priority"
                         id="prior-high"
                         value="high"
-                        checked
                         data-new-task-priority-high
                       />
                       <label for="prior-high">High</label>
@@ -226,6 +225,7 @@
                         name="priority"
                         id="prior-low"
                         value="low"
+                        checked
                         data-new-task-priority-low
                       />
                       <label for="prior-low">Low</label>
@@ -233,9 +233,13 @@
                   </div>
                   <div class="form-row">
                     <label>Remarks</label>
-                    <input type="text" data-new-task-remarks />
+                    <!-- <input type="text" data-new-task-remarks /> -->
+                    <textarea rows="3" data-new-task-remarks></textarea>
                   </div>
-                  <button class="btn-create-task">Add task</button>
+                  <div class="form-row">
+                    <button class="btn-create-task">Add task</button>
+                    <div class="new-task-error-msg" data-new-task-error-msg></div>
+                  </div>
                 </form>
               </div>
             </div>
@@ -277,15 +281,46 @@
             <span class="custom-checkbox"></span>
           </label>
         </div>
-        <div class="description" contenteditable="true">description</div>
-        <div class="remarks" contenteditable="true">remarks</div>
+        <!-- <div class="description"  onkeypress="return (this.innerText.length <= 50)">description</div> -->
+        <div class="description">description</div>
+        <div class="remarks">remarks</div>
         <div class="date">date</div>
         <div class="priority">high</div>
         <div class="card-btns-container" data-card-btns-container>
-          <button class="edit">
-            <img src="/docs/assets/images/edit-task.png" alt="edit task">
+          <div class="edit-btns-container" data-edit-btns-container>
+            <button class="delete-task show">
+              <img
+                src="docs/assets/images/trash-can.png"
+                alt="delete task"
+                style="width: 100%; height: 100%"
+                data-delete-task
+              />
+            </button>
+            <button class="save-edit">
+              <img
+                src="docs/assets/images/tick-save.png"
+                alt="save edit"
+                style="width: 100%; height: 100%"
+                data-save-edit-task
+              />
+            </button>
+            <button class="cancel-edit">
+              <img
+                src="docs/assets/images/cross-cancel.png"
+                alt="cancel edit"
+                style="width: 100%; height: 100%"
+                data-cancel-edit-task
+              />
+            </button>
+          </div>
+          <button class="edit-task">
+            <img
+              src="docs/assets/images/edit-task.png"
+              alt="edit task"
+              style="width: 100%; height: 100%"
+              data-edit-task
+            />
           </button>
-          <input type="button" value="save" data-save-edit-task " />
         </div>
       </div>
     </template>
