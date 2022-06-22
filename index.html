@@ -5,7 +5,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Todo list</title>
-    <!-- <link rel="stylesheet" href="reset.css" /> -->
     <link rel="stylesheet" href="styles.css" />
     <!-- <script
       src="https://kit.fontawesome.com/e871ab8982.js"
@@ -65,6 +64,7 @@
                 />
               </div>
               <div class="dashboard" data-dashboard>Dashboard</div>
+              <div class="total-tasks-remain" data-total-tasks-remain>199</div>
             </div>
 
             <div class="sidebar-item-wrapper">
@@ -142,6 +142,7 @@
                       src="docs/assets/images/trash-can.png"
                       style="width: 100%; height: 100%"
                       data-dropdown-btn
+                      data-delete-tasks-menu-btn
                     />
                   </button>
                 </div>
@@ -184,7 +185,6 @@
                 </button>
                 <!-- sub-menu: add -->
                 <form class="dropdown-menu new-task-form" data-new-task-form>
-                  <!-- <div class="new-task-form-title">Add new task</div> -->
                   <div class="form-row">
                     <label>Category *</label>
                     <input type="text" data-new-task-category />
@@ -233,7 +233,6 @@
                   </div>
                   <div class="form-row">
                     <label>Remarks</label>
-                    <!-- <input type="text" data-new-task-remarks /> -->
                     <textarea rows="3" data-new-task-remarks></textarea>
                   </div>
                   <div class="form-row">
@@ -246,26 +245,11 @@
           </div>
           <!-- card -->
           <div class="card">
+            <div class="sort-btns-container">
+              <button class="sort-btn sort-all show" data-sort-all>All</button>
+              <button class="sort-btn sort-today" data-sort-today>Today</button>
+            </div>
             <div class="tasks-container" data-tasks-container>
-              <!-- <div class="task-wrapper view-modules">
-                  <div class="task-name">
-                    <input type="checkbox" id="task-1" />
-                    <label for="task-1">
-                      <span class="custom-checkbox"></span>
-                      Task 1
-                    </label>
-                  </div>
-                </div>
-                <div class="task-wrapper">
-                  <div class="task-name">
-                    <input type="checkbox" id="task-2" />
-                    <label for="task-2">
-                      <span class="custom-checkbox"></span>
-                      Task 2
-                    </label>
-            
-                  </div>
-                </div> -->
             </div>
           </div>
         </div>
@@ -313,7 +297,7 @@
               />
             </button>
           </div>
-          <button class="edit-task">
+          <button class="edit-task" data-edit-task-btn>
             <img
               src="docs/assets/images/edit-task.png"
               alt="edit task"
