@@ -21,9 +21,9 @@ const displayCategoryTitle = document.querySelector(
   '[data-display-category-title]'
 );
 const taskRemain = document.querySelector('[data-task-remain]');
-const deleteTasksMenuBtn = document.querySelector(
-  '[data-delete-tasks-menu-btn]'
-);
+// const deleteTasksMenuBtn = document.querySelector(
+//   '[data-delete-tasks-menu-btn]'
+// );
 const viewModulesBtn = document.querySelector('[data-view-modules]');
 const viewListsBtn = document.querySelector('[data-view-lists]');
 const clearCompletedTasksBtn = document.querySelector(
@@ -34,6 +34,8 @@ const deleteWholeListBtn = document.querySelector('[data-delete-whole-list]');
 //cards
 const sortAllBtn = document.querySelector('[data-sort-all]');
 const sortTodayBtn = document.querySelector('[data-sort-today]');
+const sortOngoingBtn = document.querySelector('[data-sort-ongoing]');
+const sortCompletedBtn = document.querySelector('[data-sort-completed]');
 
 const tasksContainer = document.querySelector('[data-tasks-container]');
 const taskTemplate = document.querySelector('#task-template');
@@ -269,20 +271,30 @@ document.addEventListener('click', (e) => {
   });
 });
 
-sortTodayBtn.addEventListener('click', ()=> {
-  if (sortTodayBtn.classList.contains("show")) return;
-
-  sortTodayTasks()
-  sortTodayBtn.classList.toggle('show');
-  sortAllBtn.classList.toggle('show');
+sortAllBtn.addEventListener('click', () => {
+  toggleSortBtn(sortAllBtn);
+  render();
 });
 
-sortAllBtn.addEventListener('click', () => {
-  if (sortAllBtn.classList.contains("show")) return;
+sortTodayBtn.addEventListener('click', () => {
+  toggleSortBtn(sortTodayBtn);
+  const sortedTasksObject = sortTodayTasks();
+  clearElement(tasksContainer);
+  renderTasks(sortedTasksObject);
+});
 
-  render();
-  sortAllBtn.classList.toggle('show');
-  sortTodayBtn.classList.toggle('show');
+sortOngoingBtn.addEventListener('click', () => {
+  toggleSortBtn(sortOngoingBtn);
+  const sortedTasksObject = sortOngingTasks();
+  clearElement(tasksContainer);
+  renderTasks(sortedTasksObject);
+});
+
+sortCompletedBtn.addEventListener('click', () => {
+  toggleSortBtn(sortCompletedBtn);
+  const sortedTasksObject = sortCompletedTasks();
+  clearElement(tasksContainer);
+  renderTasks(sortedTasksObject);
 });
 
 clearCompletedTasksBtn.addEventListener('click', clearCompletedTasks);
@@ -340,13 +352,13 @@ function render() {
     renderTasks(allCategories);
     displayCategoryTitle.innerText = 'Dashboard';
     updateTaskRemain(allCategories);
-    deleteTasksMenuBtn.style.display = 'none';
+    // deleteTasksMenuBtn.style.display = 'none';
   } else {
     const selectedCategory = returnSelectedCategory();
     displayCategoryTitle.innerText = selectedCategory.categoryName;
     renderTasks(selectedCategory);
     updateTaskRemain(selectedCategory);
-    deleteTasksMenuBtn.style.display = 'block';
+    // deleteTasksMenuBtn.style.display = 'block';
   }
 }
 
@@ -453,12 +465,56 @@ function renderTasks(listObject) {
 
 function sortTodayTasks() {
   const today = new Date().toLocaleDateString('en-CA');
-  const allTasks = returnAllTasks()
-  const sortedTasks = allTasks.filter((task) => task.dueDate === today);
 
-  const sortedTasksObject = { tasks: sortedTasks };
-  clearElement(tasksContainer);
-  renderTasks(sortedTasksObject);
+  if (selectedCategoryId === null) {
+    const allTasks = returnAllTasks();
+    const sortedTasksArray = allTasks.filter((task) => task.dueDate === today);
+    return { tasks: sortedTasksArray };
+  } else {
+    const selectedCategory = returnSelectedCategory();
+    const sortedTasksArray = selectedCategory.tasks.filter(
+      (task) => task.dueDate === today
+    );
+    return { tasks: sortedTasksArray };
+  }
+}
+
+function sortOngingTasks() {
+  if (selectedCategoryId === null) {
+    const allTasks = returnAllTasks();
+    const sortedTasksArray = allTasks.filter((task) => task.complete === false);
+    return { tasks: sortedTasksArray };
+  } else {
+    const selectedCategory = returnSelectedCategory();
+    const sortedTasksArray = selectedCategory.tasks.filter(
+      (task) => task.complete === false
+    );
+    return { tasks: sortedTasksArray };
+  }
+}
+
+function sortCompletedTasks() {
+  if (selectedCategoryId === null) {
+    const allTasks = returnAllTasks();
+    const sortedTasksArray = allTasks.filter((task) => task.complete === true);
+    return{ tasks: sortedTasksArray };
+  } else {
+    const selectedCategory = returnSelectedCategory();
+    const sortedTasksArray = selectedCategory.tasks.filter(
+      (task) => task.complete === true
+    );
+    return{ tasks: sortedTasksArray };
+  }
+}
+
+function toggleSortBtn(clickedBtn) {
+  if (clickedBtn.classList.contains('show')) return;
+
+  const sortBtns = [sortAllBtn, sortTodayBtn, sortOngoingBtn, sortCompletedBtn];
+  clickedBtn.classList.add('show');
+  sortBtns.forEach((btn) => {
+    if (btn !== clickedBtn) btn.classList.remove('show');
+  });
 }
 
 function searchTasks(searchString) {
@@ -490,7 +546,7 @@ function updateTaskRemain(Category) {
 
 function updateTotalTasksRemain() {
   // const allTasks = masterList.map((category) => category.tasks).flat();
-  const allTasks = returnAllTasks()
+  const allTasks = returnAllTasks();
   const allTasksObject = { tasks: allTasks };
   let totalRasksRemain = allTasksObject.tasks.filter(
     (task) => task.complete === false
@@ -508,19 +564,27 @@ function deleteCategory() {
 
 function clearCompletedTasks() {
   if (selectedCategoryId === null) {
-    setSelectedCategoryId();
+    masterList.forEach((category) => {
+      category.tasks = category.tasks.filter((task) => task.complete === false);
+    });
+  } else {
+    const selectedCategory = returnSelectedCategory();
+    selectedCategory.tasks = selectedCategory.tasks.filter(
+      (task) => task.complete === false
+    );
   }
-
-  const selectedCategory = returnSelectedCategory();
-  selectedCategory.tasks = selectedCategory.tasks.filter(
-    (task) => task.complete === false
-  );
   saveAndRender();
 }
 
 function deleteWholeList() {
-  const selectedCategory = returnSelectedCategory();
-  selectedCategory.tasks = [];
+  if (selectedCategoryId === null) {
+    masterList.forEach((category) => {
+      category.tasks = [];
+    });
+  } else {
+    const selectedCategory = returnSelectedCategory();
+    selectedCategory.tasks = [];
+  }
   saveAndRender();
 }
 
@@ -545,7 +609,7 @@ function returnSelectedTask(e) {
   return selectedCategory.tasks.find((task) => task.id == e);
 }
 
-function returnAllTasks(){
+function returnAllTasks() {
   return masterList.map((category) => category.tasks).flat();
 }
 
