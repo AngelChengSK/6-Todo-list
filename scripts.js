@@ -2,7 +2,7 @@
 const menuBtn = document.querySelector('[data-menu-btn]');
 const searchInput = document.querySelector('[data-search-bar-input]');
 const searchCancel = document.querySelector('[data-cancel-search]');
-const editUsername = document.querySelector('[data-username]')
+const editUsername = document.querySelector('[data-username]');
 
 //sidebar
 const sidebar = document.querySelector('[data-sidebar]');
@@ -12,9 +12,10 @@ const DashboardBtn = document.querySelector('[data-dashboard]');
 const totalTasksRemain = document.querySelector('[data-total-tasks-remain]');
 const categoriesContainer = document.querySelector(
   '[data-categories-container]'
-  );
+);
 const newCategoryForm = document.querySelector('[data-new-category-form]');
 const newCategoryInput = document.querySelector('[data-new-category-input]');
+const addCategoryErrorMsg = document.querySelector('[data-add-category-error-msg]');
 const deleteCategoryBtn = document.querySelector('[data-delete-category]');
 
 //sub-menu
@@ -60,7 +61,7 @@ const LOCAL_STORAGE_SELECTED_CATEGORY_ID_KEY = 'todo.selectedCategoryId';
 const LOCAL_STORAGE_VIEW_PREFERENCE = 'todo.viewPreference';
 // const LOCAL_STORAGE_SORT_PREFERENCE = 'todo.sortPreference';
 
-let username = localStorage.getItem(LOCAL_STORAGE_USERNAME_KEY) || "Stranger";
+let username = localStorage.getItem(LOCAL_STORAGE_USERNAME_KEY) || 'Stranger';
 let profilePic = localStorage.getItem(LOCAL_STORAGE_PROFILE_PIC_KEY);
 let masterList =
   JSON.parse(localStorage.getItem(LOCAL_STORAGE_CATEGORIES_KEY)) || [];
@@ -108,18 +109,18 @@ searchCancel.addEventListener('click', () => {
 });
 
 editUsername.addEventListener('keyup', (e) => {
-  if (e.key == "Enter") {
-   editUsername.innerText="ERROR"
+  if (e.key == 'Enter') {
+    editUsername.innerText = 'ERROR';
   }
 
-  localStorage.setItem(LOCAL_STORAGE_USERNAME_KEY, e.target.innerText)
-})
+  localStorage.setItem(LOCAL_STORAGE_USERNAME_KEY, e.target.innerText);
+});
 
 sidebar.addEventListener('click', () => {
   if (!sidebar.classList.contains('open')) {
-    sidebar.classList.add('open')
+    sidebar.classList.add('open');
   }
-})
+});
 
 profilePicInput.addEventListener('change', function () {
   const reader = new FileReader();
@@ -134,7 +135,20 @@ profilePicInput.addEventListener('change', function () {
 newCategoryForm.addEventListener('submit', (e) => {
   e.preventDefault();
 
-  if (newCategoryInput.value === null || newCategoryInput.value === '') return;
+  if (newCategoryInput.value === null || newCategoryInput.value === '')
+    return
+
+  const categoryNameExists = masterList.some((item) => {
+    return item.categoryName === newCategoryInput.value;
+  });
+
+  if (categoryNameExists) {
+    addCategoryErrorMsg.classList.add('show');
+    setTimeout(() => {
+      addCategoryErrorMsg.classList.remove('show');
+    }, 1500);
+  }
+
   const newCategoryName = newCategoryInput.value;
   const newCategory = createCategory(newCategoryName);
   masterList.push(newCategory);
@@ -196,7 +210,6 @@ newTaskForm.addEventListener('submit', (e) => {
   saveAndRender();
 });
 
-
 tasksContainer.addEventListener('click', (e) => {
   const selectedTaskId = e.target.id.replace(/[^0-9]/g, '');
 
@@ -208,7 +221,7 @@ tasksContainer.addEventListener('click', (e) => {
   const selectedTask = selectedCategory.tasks.find(
     (task) => task.id == selectedTaskId
   );
-  
+
   if (
     e.target.tagName.toLowerCase() === 'input' &&
     e.target.getAttribute('type') === 'checkbox'
@@ -258,7 +271,6 @@ tasksContainer.addEventListener('click', (e) => {
   }
 });
 
-
 DashboardBtn.addEventListener('click', () => {
   selectedCategoryId = null;
   saveAndRender();
@@ -287,7 +299,7 @@ document.addEventListener('click', (e) => {
   });
 
   if (e.target.closest('[data-content-container]')) {
-    sidebar.classList.remove('open')
+    sidebar.classList.remove('open');
   }
 });
 
