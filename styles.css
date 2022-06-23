@@ -861,6 +861,7 @@ label[for='profile-pic-upload'] {
 .task-wrapper.view-lists .task-header-section {
   display: flex;
   flex-direction: row;
+  width: calc(100% - 90px);
 }
 
 .task-wrapper.view-lists .task-name {
@@ -871,7 +872,7 @@ label[for='profile-pic-upload'] {
 }
 
 .task-wrapper.view-lists .description {
-  max-width: 25%;
+  width: 100%;
   margin-left: 15px;
   color: rgb(166, 166, 166);
   overflow: hidden;
