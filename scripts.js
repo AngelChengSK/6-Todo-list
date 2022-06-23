@@ -15,7 +15,7 @@ const categoriesContainer = document.querySelector(
 );
 const newCategoryForm = document.querySelector('[data-new-category-form]');
 const newCategoryInput = document.querySelector('[data-new-category-input]');
-const addCategoryErrorMsg = document.querySelector('[data-add-category-error-msg]');
+const createCategoryBtn = document.querySelector('[btn-create-category]');
 const deleteCategoryBtn = document.querySelector('[data-delete-category]');
 
 //sub-menu
@@ -135,20 +135,22 @@ profilePicInput.addEventListener('change', function () {
 newCategoryForm.addEventListener('submit', (e) => {
   e.preventDefault();
 
-  if (newCategoryInput.value === null || newCategoryInput.value === '')
-    return
+  if (newCategoryInput.value === null || newCategoryInput.value === '') return;
 
   const categoryNameExists = masterList.some((item) => {
     return item.categoryName === newCategoryInput.value;
   });
 
   if (categoryNameExists) {
-    addCategoryErrorMsg.classList.add('show');
+    createCategoryBtn.classList.add('error')
     setTimeout(() => {
-      addCategoryErrorMsg.classList.remove('show');
-    }, 1500);
+      createCategoryBtn.classList.remove('error')
+    }, 2500);
+    newCategoryInput.value = '';
+    return;
   }
 
+  createCategoryBtn.classList.remove('error')
   const newCategoryName = newCategoryInput.value;
   const newCategory = createCategory(newCategoryName);
   masterList.push(newCategory);
@@ -174,6 +176,9 @@ newTaskForm.addEventListener('submit', (e) => {
 
   if (selectedCategory === undefined) {
     newTaskErrorMsg.innerText = 'Please enter valid category name';
+    setTimeout(() => {
+      newTaskErrorMsg.innerText = '';
+    }, 3000)
     return;
   } else {
     newTaskErrorMsg.innerText = '';
@@ -181,6 +186,9 @@ newTaskForm.addEventListener('submit', (e) => {
 
   if (newTaskName.value === null || newTaskName.value === '') {
     newTaskErrorMsg.innerText = 'Please enter task name';
+    setTimeout(() => {
+      newTaskErrorMsg.innerText = '';
+    }, 3000)
     return;
   } else {
     newTaskErrorMsg.innerText = '';
@@ -466,14 +474,14 @@ function renderTasks(listObject) {
     taskWrapper.classList.add(viewPreference);
 
     if (checkbox.checked) {
-      taskWrapper.style.borderColor = 'rgba(222,220,238,1)';
+      taskWrapper.style.borderColor = 'rgb(215, 215, 221)';
       newElement.querySelector('[data-edit-task-btn]').style.display = 'none';
     } else if (task.priority === 'high') {
-      taskWrapper.style.borderColor = 'rgba(243,129,129,1)';
+      taskWrapper.style.borderColor = 'rgb(243,129,129)';
     } else if (task.priority === 'medium') {
-      taskWrapper.style.borderColor = 'rgba(252,227,138,1)';
+      taskWrapper.style.borderColor = 'rgb(252,227,138)';
     } else {
-      taskWrapper.style.borderColor = 'rgba(149,225,211,1)';
+      taskWrapper.style.borderColor = 'rgb(149,225,211)';
     }
 
     tasksContainer.append(newElement);

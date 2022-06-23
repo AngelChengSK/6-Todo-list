@@ -457,28 +457,16 @@ label[for='profile-pic-upload'] {
   text-align: center;
   order: 2;
   cursor: pointer;
+  transition: rotate 500ms ease;
 }
 
 .btn-create-category:hover {
-  color: rgba(237, 138, 63, 1);
+  color: rgb(0, 163, 163);
 }
 
-.add-category-error-msg{
-  position: absolute;
-  bottom: 123px;
-  left: 20px;
-  font-size: 16px;
-  color: rgba(237, 138, 63, 1);
-  background-color: white;
-  padding: 10px 0;
-  visibility: hidden;
-  opacity: 0;
-  transition: all 200ms ease;
-}
-
-.add-category-error-msg.show{
-  visibility: visible;
-  opacity: 1;
+.btn-create-category.error{
+  rotate: 45deg;
+  color: rgb(252, 34, 135);
 }
 
 .delete-category {
@@ -621,8 +609,8 @@ label[for='profile-pic-upload'] {
   padding: 7px 15px;
   border-radius: 30px;
   border: none;
-  background-color: rgb(221, 238, 223);
-  color: rgb(64, 170, 176);
+  background-color: rgb(210, 241, 238);
+  color: rgb(52, 174, 164);
   position: absolute;
   right: 22px;
   bottom: 15px;
@@ -633,7 +621,7 @@ label[for='profile-pic-upload'] {
   bottom: 20px;
   left: 5px;
   margin-left: 13px;
-  color: rgba(237, 138, 63, 1);
+  color:rgb(239, 157, 125);
 }
 
 /*  ========
@@ -642,24 +630,45 @@ label[for='profile-pic-upload'] {
 .sort-btns-container {
   position: absolute;
   top: -10px;
-  margin-left: -15px;
+  /* margin-left: -15px; */
 }
 
 .sort-btn {
   font-size: 16px;
   background-color: transparent;
   border: none;
-  border-radius: 20px;
-  padding: 2px 15px;
-  transition: all 200ms ease;
+  padding: 2px 0;
+  margin-right: 15px;
   cursor: pointer;
+  position: relative;
+}
+
+.sort-btn:after{
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  left: 0;
+  bottom: -2px;
+  background-color: rgb(10, 106, 104);
+  transform: scaleX(0);
+  transform-origin: bottom right;
+  transition: transform 350ms ease-out;
 }
 
 .sort-all.show,
 .sort-today.show,
 .sort-ongoing.show,
 .sort-completed.show {
-  background-color: rgb(222, 222, 242);
+    color:rgb(3, 53, 53);
+}
+
+.sort-all.show:after,
+.sort-today.show:after,
+.sort-ongoing.show:after,
+.sort-completed.show:after{
+    transform: scaleX(1);
+    transform-origin: bottom left;
 }
 
 .tasks-container.view-modules,
@@ -695,13 +704,13 @@ label[for='profile-pic-upload'] {
   top: 2px;
   left: -32px;
   border-radius: 50%;
-  border: 2px solid rgb(202, 198, 230);
+  border: 2px solid rgb(215, 215, 221);
   cursor: pointer;
 }
 
 [type='checkbox']:checked + label .custom-checkbox {
-  border: 2px solid rgb(202, 198, 230);
-  background-color: rgb(202, 198, 230);
+  border: 2px solid rgb(215, 215, 221);
+  background-color: rgb(215, 215, 221);
 }
 
 [type='checkbox']:checked + label .custom-checkbox::after {
@@ -855,11 +864,9 @@ label[for='profile-pic-upload'] {
 }
 
 .task-wrapper.view-lists .task-name {
-  /* position: absolute; */
   max-width: 250px;
   font-size: 20px;
   flex-shrink: 0;
-  /* border: 1px solid red; */
   margin-left: 45px;
 }
 
@@ -871,15 +878,15 @@ label[for='profile-pic-upload'] {
   text-overflow: ellipsis;
   white-space: nowrap;
   align-self: flex-end;
-  /* border: 1px solid red; */
+  padding-bottom: 1px;
 }
 
 .task-wrapper.view-lists .date {
   position: absolute;
   right: 0px;
+  bottom: 13px;
   padding: 0 20px;
   background-color: white;
-  /* border: 1px solid red; */
 }
 
 .task-wrapper.view-lists .priority,
@@ -953,13 +960,12 @@ label[for='profile-pic-upload'] {
     padding-bottom: 15px;
   }
 
-  /* .sub-menu-title {
-    position: absolute;
-    top: 73px;
-  } */
-
   .task-remain {
     display: none;
+  }
+
+  .sub-menu-settings {
+   margin-left: -3px;
   }
 
   .delete-options-menu {
@@ -971,6 +977,7 @@ label[for='profile-pic-upload'] {
     right: auto;
     top: 140px;
   }
+
   .tasks-container.view-modules {
     grid-template-columns: repeat(1, minmax(230px, 1fr));
   }
@@ -1011,4 +1018,8 @@ label[for='profile-pic-upload'] {
   .form-row textarea {
     width: 188px;
   }
+
+  .new-task-error-msg {
+    font-size: 14px;
+      }
 }
