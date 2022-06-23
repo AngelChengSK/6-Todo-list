@@ -21,15 +21,10 @@ const displayCategoryTitle = document.querySelector(
   '[data-display-category-title]'
 );
 const taskRemain = document.querySelector('[data-task-remain]');
-// const deleteTasksMenuBtn = document.querySelector(
-//   '[data-delete-tasks-menu-btn]'
-// );
 const viewModulesBtn = document.querySelector('[data-view-modules]');
 const viewListsBtn = document.querySelector('[data-view-lists]');
-const clearCompletedTasksBtn = document.querySelector(
-  '[data-clear-completed-tasks]'
-);
-const deleteWholeListBtn = document.querySelector('[data-delete-whole-list]');
+const clearCurrentListBtn = document.querySelector('[data-clear-current-list]');
+const clearWholeListBtn = document.querySelector('[data-delete-whole-list]');
 
 //cards
 const sortAllBtn = document.querySelector('[data-sort-all]');
@@ -55,10 +50,12 @@ const saveEditTask = document.querySelector('[data-save-edit-task]');
 // localStorage.removeItem('todo.profilePic')
 
 // ================== variables =====================
+let sortPreference;
 
 const LOCAL_STORAGE_CATEGORIES_KEY = 'todo.categoriesList';
 const LOCAL_STORAGE_SELECTED_CATEGORY_ID_KEY = 'todo.selectedCategoryId';
 const LOCAL_STORAGE_VIEW_PREFERENCE = 'todo.viewPreference';
+const LOCAL_STORAGE_SORT_PREFERENCE = 'todo.sortPreference';
 const LOCAL_STORAGE_PROFILE_PIC_KEY = 'todo.profilePic';
 
 let masterList =
@@ -70,7 +67,6 @@ let viewPreference =
   localStorage.getItem(LOCAL_STORAGE_VIEW_PREFERENCE) || 'view-modules';
 let profilePic = localStorage.getItem(LOCAL_STORAGE_PROFILE_PIC_KEY);
 
-// const allTasks = masterList.map((category) => category.tasks).flat();
 // ================== event listeners =====================
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -83,6 +79,12 @@ menuBtn.addEventListener('click', () => {
   sidebar.classList.toggle('open');
 });
 
+sidebar.addEventListener('click', () => {
+  if (!sidebar.classList.contains('open')) {
+    sidebar.classList.add('open')
+  }
+})
+
 profilePicInput.addEventListener('change', function () {
   const reader = new FileReader();
   reader.addEventListener('load', () => {
@@ -93,7 +95,6 @@ profilePicInput.addEventListener('change', function () {
   reader.readAsDataURL(this.files[0]);
 });
 
-//when new category name is submitted
 newCategoryForm.addEventListener('submit', (e) => {
   e.preventDefault();
 
@@ -106,7 +107,6 @@ newCategoryForm.addEventListener('submit', (e) => {
   render();
 });
 
-//when a category is selected
 categoriesContainer.addEventListener('click', (e) => {
   if (e.target.tagName.toLowerCase() === 'li') {
     selectedCategoryId = e.target.dataset.categoryId;
@@ -116,7 +116,6 @@ categoriesContainer.addEventListener('click', (e) => {
   }
 });
 
-//when new task is submitted
 newTaskForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const selectedCategory = masterList.find(
@@ -161,7 +160,7 @@ newTaskForm.addEventListener('submit', (e) => {
   saveAndRender();
 });
 
-//when a task is selected
+
 tasksContainer.addEventListener('click', (e) => {
   const selectedTaskId = e.target.id.replace(/[^0-9]/g, '');
 
@@ -254,6 +253,7 @@ deleteCategoryBtn.addEventListener('click', deleteCategory);
 //dropdown menu
 document.addEventListener('click', (e) => {
   const isDropdownBtn = e.target.matches('[data-dropdown-btn]');
+
   if (!isDropdownBtn && e.target.closest('[data-dropdown]') !== null) return;
   // if it is not a dropdown btn && is inside a dropdown menu, return
   //.closest will return the closest ancestor that match the selecting criteria
@@ -269,14 +269,20 @@ document.addEventListener('click', (e) => {
     if (dropdown === currentDropdown) return;
     dropdown.classList.remove('show');
   });
+
+  if (e.target.closest('[data-content-container]')) {
+    sidebar.classList.remove('open')
+  }
 });
 
 sortAllBtn.addEventListener('click', () => {
+  sortPreference = 'all';
   toggleSortBtn(sortAllBtn);
   render();
 });
 
 sortTodayBtn.addEventListener('click', () => {
+  sortPreference = 'today';
   toggleSortBtn(sortTodayBtn);
   const sortedTasksObject = sortTodayTasks();
   clearElement(tasksContainer);
@@ -284,21 +290,23 @@ sortTodayBtn.addEventListener('click', () => {
 });
 
 sortOngoingBtn.addEventListener('click', () => {
+  sortPreference = 'ongoing';
   toggleSortBtn(sortOngoingBtn);
-  const sortedTasksObject = sortOngingTasks();
+  const sortedTasksObject = sortOngoingTasks();
   clearElement(tasksContainer);
   renderTasks(sortedTasksObject);
 });
 
 sortCompletedBtn.addEventListener('click', () => {
+  sortPreference = 'completed';
   toggleSortBtn(sortCompletedBtn);
   const sortedTasksObject = sortCompletedTasks();
   clearElement(tasksContainer);
   renderTasks(sortedTasksObject);
 });
 
-clearCompletedTasksBtn.addEventListener('click', clearCompletedTasks);
-deleteWholeListBtn.addEventListener('click', deleteWholeList);
+clearCurrentListBtn.addEventListener('click', clearCurrentList);
+clearWholeListBtn.addEventListener('click', clearWholeList);
 
 // ================== functions =====================
 
@@ -344,25 +352,22 @@ function render() {
   renderCategories();
   clearElement(tasksContainer);
   updateTotalTasksRemain();
+  toggleSortBtn(sortAllBtn);
 
   if (selectedCategoryId === null) {
-    // const allTasks = masterList.map((category) => category.tasks).flat();
     const allTasks = returnAllTasks();
     const allCategories = { tasks: allTasks };
     renderTasks(allCategories);
     displayCategoryTitle.innerText = 'Dashboard';
     updateTaskRemain(allCategories);
-    // deleteTasksMenuBtn.style.display = 'none';
   } else {
     const selectedCategory = returnSelectedCategory();
     displayCategoryTitle.innerText = selectedCategory.categoryName;
     renderTasks(selectedCategory);
     updateTaskRemain(selectedCategory);
-    // deleteTasksMenuBtn.style.display = 'block';
   }
 }
 
-//delete html element
 function clearElement(element) {
   while (element.firstChild) {
     element.removeChild(element.firstChild);
@@ -479,7 +484,7 @@ function sortTodayTasks() {
   }
 }
 
-function sortOngingTasks() {
+function sortOngoingTasks() {
   if (selectedCategoryId === null) {
     const allTasks = returnAllTasks();
     const sortedTasksArray = allTasks.filter((task) => task.complete === false);
@@ -497,13 +502,13 @@ function sortCompletedTasks() {
   if (selectedCategoryId === null) {
     const allTasks = returnAllTasks();
     const sortedTasksArray = allTasks.filter((task) => task.complete === true);
-    return{ tasks: sortedTasksArray };
+    return { tasks: sortedTasksArray };
   } else {
     const selectedCategory = returnSelectedCategory();
     const sortedTasksArray = selectedCategory.tasks.filter(
       (task) => task.complete === true
     );
-    return{ tasks: sortedTasksArray };
+    return { tasks: sortedTasksArray };
   }
 }
 
@@ -545,7 +550,6 @@ function updateTaskRemain(Category) {
 }
 
 function updateTotalTasksRemain() {
-  // const allTasks = masterList.map((category) => category.tasks).flat();
   const allTasks = returnAllTasks();
   const allTasksObject = { tasks: allTasks };
   let totalRasksRemain = allTasksObject.tasks.filter(
@@ -562,21 +566,60 @@ function deleteCategory() {
   saveAndRender();
 }
 
-function clearCompletedTasks() {
-  if (selectedCategoryId === null) {
+function clearCurrentList() {
+  if (sortPreference === 'all') {
+    clearWholeList();
+  } else if (sortPreference === 'today') {
+    const todayTasks = sortTodayTasks();
+    const todayTasksIds = todayTasks.tasks.map((task) => task.id).flat();
+
     masterList.forEach((category) => {
-      category.tasks = category.tasks.filter((task) => task.complete === false);
+      category.tasks = category.tasks.filter(
+        (task) => !todayTasksIds.includes(task.id)
+      );
     });
+    saveAndRender();
+  } else if (sortPreference === 'ongoing') {
+    const ongoingTasks = sortOngoingTasks();
+    const ongoingTasksIds = ongoingTasks.tasks.map((task) => task.id).flat();
+
+    masterList.forEach((category) => {
+      category.tasks = category.tasks.filter(
+        (task) => !ongoingTasksIds.includes(task.id)
+      );
+    });
+    saveAndRender();
   } else {
-    const selectedCategory = returnSelectedCategory();
-    selectedCategory.tasks = selectedCategory.tasks.filter(
-      (task) => task.complete === false
-    );
+    const completedTasks = sortCompletedTasks();
+    const completedTasksIds = completedTasks.tasks
+      .map((task) => task.id)
+      .flat();
+    masterList.forEach((category) => {
+      category.tasks = category.tasks.filter(
+        (task) => !completedTasksIds.includes(task.id)
+      );
+    });
+    saveAndRender();
   }
-  saveAndRender();
 }
 
-function deleteWholeList() {
+function clearTodayTasks() {
+  const today = new Date().toLocaleDateString('en-CA');
+
+  if (selectedCategoryId === null) {
+    const allTasks = returnAllTasks();
+    const sortedTasksArray = allTasks.filter((task) => task.dueDate !== today);
+    return { tasks: sortedTasksArray };
+  } else {
+    const selectedCategory = returnSelectedCategory();
+    const sortedTasksArray = selectedCategory.tasks.filter(
+      (task) => task.dueDate !== today
+    );
+    return { tasks: sortedTasksArray };
+  }
+}
+
+function clearWholeList() {
   if (selectedCategoryId === null) {
     masterList.forEach((category) => {
       category.tasks = [];

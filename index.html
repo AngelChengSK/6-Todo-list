@@ -27,22 +27,18 @@
             data-menu-btn
           />
         </div>
-        <div class="search-bar">
-          <input
-            type="text"
-            placeholder="search"
-            class="search-input"
-            data-search-bar-input
-          />
-          <button class="btn btn-cancel-search" data-cancel-search>⨉</button>
+        <div class="header-right">
+          <div class="search-bar">
+            <input
+              type="text"
+              placeholder="search"
+              class="search-input"
+              data-search-bar-input
+            />
+            <button class="btn btn-cancel-search" data-cancel-search>⨉</button>
+          </div>
+          <div class="user-name">Hi, Stranger</div>
         </div>
-        <input
-          type="file"
-          id="profile-pic-upload"
-          accept="image/jpeg, image/png, image/jpg"
-          data-profile-pic-input
-        />
-        <div class="user-name">Username</div>
       </header>
 
       <!-- main -->
@@ -50,7 +46,17 @@
         <!-- sidebar -->
         <aside class="sidebar open" data-sidebar>
           <div class="sidebar-top">
-            <div id="profile-pic" data-profile-pic></div>
+            <div id="profile-pic" data-profile-pic>
+              <label for="profile-pic-upload">
+                change
+                <input
+                  type="file"
+                  id="profile-pic-upload"
+                  accept="image/jpeg, image/png, image/jpg"
+                  data-profile-pic-input
+                />
+              </label>
+            </div>
           </div>
 
           <div class="sidebar-middle">
@@ -126,7 +132,7 @@
           </div>
         </aside>
 
-        <div class="content-container">
+        <div class="content-container" data-content-container>
           <!-- sub-menu -->
           <div class="sub-menu">
             <div class="sub-menu-title">
@@ -148,11 +154,14 @@
                 </div>
                 <!-- sub-menu: delete -->
                 <div class="dropdown-menu delete-options-menu">
-                  <button class="btn-clear-tasks" data-clear-completed-tasks>
-                    Clear completed tasks
+                  <button
+                    class="btn-clear-current-list"
+                    data-clear-current-list
+                  >
+                    Clear current list
                   </button>
-                  <button class="btn-empty-tasks" data-delete-whole-list>
-                    Empty the list
+                  <button class="btn-clear-whole-list" data-delete-whole-list>
+                    Clear the whole list
                   </button>
                 </div>
               </div>
@@ -237,7 +246,10 @@
                   </div>
                   <div class="form-row">
                     <button class="btn-create-task">Add task</button>
-                    <div class="new-task-error-msg" data-new-task-error-msg></div>
+                    <div
+                      class="new-task-error-msg"
+                      data-new-task-error-msg
+                    ></div>
                   </div>
                 </form>
               </div>
@@ -246,13 +258,16 @@
           <!-- card -->
           <div class="card">
             <div class="sort-btns-container">
-              <button class="sort-btn sort-all show" data-sort-all>All</button>
+              <button class="sort-btn sort-all" data-sort-all>All</button>
               <button class="sort-btn sort-today" data-sort-today>Today</button>
-              <button class="sort-btn sort-ongoing" data-sort-ongoing>Ongoing</button>
-              <button class="sort-btn sort-completed" data-sort-completed>Completed</button>
+              <button class="sort-btn sort-ongoing" data-sort-ongoing>
+                Ongoing
+              </button>
+              <button class="sort-btn sort-completed" data-sort-completed>
+                Completed
+              </button>
             </div>
-            <div class="tasks-container" data-tasks-container>
-            </div>
+            <div class="tasks-container" data-tasks-container></div>
           </div>
         </div>
       </div>
@@ -274,7 +289,7 @@
         <div class="priority">high</div>
         <div class="card-btns-container" data-card-btns-container>
           <div class="edit-btns-container" data-edit-btns-container>
-            <button class="delete-task show">
+            <button class="delete-task">
               <img
                 src="docs/assets/images/trash-can.png"
                 alt="delete task"
