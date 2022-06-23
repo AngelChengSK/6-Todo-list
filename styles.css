@@ -960,3 +960,10 @@ label[for='profile-pic-upload'] {
     display: none;
   }
 }
+
+@media (max-width: 420px){
+  .form-row input[type='text'],
+.form-row textarea {
+  width: 188px;
+}
+}
