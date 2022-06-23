@@ -114,7 +114,7 @@ body {
   transform: scale(1.1);
 }
 
-.header-right{
+.header-right {
   display: flex;
   align-items: center;
 }
@@ -139,21 +139,43 @@ body {
 .btn-cancel-search {
   background-color: transparent;
   border: none;
-  font-size: 17px;
   position: absolute;
   top: 5px;
-  right: 15px;
+  right: 10px;
   opacity: 0;
   transition: opacity 200ms ease-in;
 }
 
 .btn-cancel-search.active {
-  opacity: 0.5;
+  opacity: 0.2;
 }
 
-.user-name {
+.greeting {
   margin-left: 30px;
 }
+
+.username {
+  margin-left: 7px;
+  min-width: 20px;
+  max-width: 140px;
+  height: 22px;
+  cursor: pointer;
+  /* outline: none; */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.username:hover {
+  /* opacity: ; */
+  background-color: rgb(235, 251, 247);
+}
+
+/* .username:focus{
+  border: 1px solid lightgrey;
+  background-color: white;
+  
+} */
 
 /*  ========
     sidebar
@@ -230,10 +252,9 @@ label[for='profile-pic-upload'] {
 
 .sidebar-middle {
   height: 75%;
-
-  transition: all 500ms ease;
   display: flex;
   flex-direction: column;
+  transition: height 500ms ease;
 }
 
 .sidebar.open .sidebar-middle {
@@ -244,10 +265,7 @@ label[for='profile-pic-upload'] {
   display: flex;
   justify-content: space-between;
   padding: 13px 0 13px var(--padding-window);
-}
-
-.sidebar.open .sidebar-item-wrapper {
-  padding: 13px var(--padding-window);
+  position: relative;
 }
 
 .sidebar-icon-container {
@@ -263,11 +281,12 @@ label[for='profile-pic-upload'] {
 }
 
 .sidebar-icon-container + div {
+  width: 120px;
   visibility: hidden;
   opacity: 0;
   position: absolute;
   left: 65px;
-  transition: all 150ms ease-in;
+  transition: opacity 150ms ease-in;
 }
 
 .sidebar.open .sidebar-icon-container + div {
@@ -284,7 +303,7 @@ label[for='profile-pic-upload'] {
   padding: 2px 5px;
   border-radius: 50px;
   position: absolute;
-  left: 175px;
+  right: 12%;
   color: white;
   visibility: hidden;
   transform: scale(0);
@@ -349,13 +368,12 @@ label[for='profile-pic-upload'] {
 }
 
 .sidebar-bottom {
-  height: 50px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: var(--sidebar-width);
   bottom: 0;
-  padding: 0 var(--padding-window);
+  padding: 15px var(--padding-window);
   background-color: rgb(255, 255, 255);
   border-top: 1px solid lightgrey;
 }
@@ -369,9 +387,8 @@ label[for='profile-pic-upload'] {
   cursor: pointer;
 }
 
-
 .btn-add-category:hover,
-.btn-delete-category:hover{
+.btn-delete-category:hover {
   transform: scale(1.1);
 }
 
@@ -397,18 +414,15 @@ label[for='profile-pic-upload'] {
 
 .new-category-form {
   position: absolute;
-  bottom: -10px;
+  bottom: 45px;
   left: -30px;
-  background-color: white;
   padding: 0 30px;
-  border: 1px solid var(--clr-light-grey);
-  border-top: 1px solid lightgrey;
-  border-right: 1px solid lightgrey;
   width: 100%;
-  height: 51px;
+  height: 65px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: rgb(243, 243, 243);
 }
 
 .dropdown.show .new-category-form-container {
@@ -425,18 +439,20 @@ label[for='profile-pic-upload'] {
   font-size: 18px;
   outline: none;
   margin: 10px 0;
+  background-color: rgb(243, 243, 243);
 }
 
 .add-category-input::placeholder {
-  opacity: 0.3;
+  opacity: 0.5;
+  /* color:white; */
 }
 
 .btn-create-category {
   background-color: transparent;
   border: none;
-  font-size: 25px;
   font-weight: bold;
-  margin-right: -8px;
+  margin-right: 5px;
+  font-size: 30px;
   text-align: center;
   order: 2;
   cursor: pointer;
@@ -526,7 +542,7 @@ label[for='profile-pic-upload'] {
 
 .btn-clear-current-list:hover,
 .btn-clear-whole-list:hover {
-  color: rgb(65, 154, 152);
+  color: rgb(68, 173, 179);
 }
 
 .view-options {
@@ -542,7 +558,7 @@ label[for='profile-pic-upload'] {
   position: absolute;
   right: 20px;
   background-color: white;
-  padding: 10px 20px;
+  padding: 10px 20px 50px 20px;
   margin-top: var(--dropdown-margin-top);
   border: 1px solid var(--clr-light-grey);
   border-radius: 5px;
@@ -585,10 +601,17 @@ label[for='profile-pic-upload'] {
   padding: 7px 15px;
   border-radius: 30px;
   border: none;
-  background-color: rgb(217, 255, 207);
+  background-color: rgb(221, 238, 223);
+  color: rgb(64, 170, 176);
+  position: absolute;
+  right: 22px;
+  bottom: 15px;
 }
 
 .new-task-error-msg {
+  position: absolute;
+  bottom: 20px;
+  left: 5px;
   margin-left: 13px;
   color: rgba(237, 138, 63, 1);
 }
@@ -611,7 +634,6 @@ label[for='profile-pic-upload'] {
   transition: all 200ms ease;
   cursor: pointer;
 }
-
 
 .sort-all.show,
 .sort-today.show,
@@ -641,23 +663,18 @@ label[for='profile-pic-upload'] {
   position: relative;
 }
 
-.task-name > label {
-  position: relative;
-}
-
 [type='checkbox'] {
   transform: scale(0);
+  position: absolute;
 }
 
 .custom-checkbox {
-  display: inline-block;
   width: 22px;
   height: 22px;
-  position: relative;
-  top: 3px;
-  left: -5px;
+  position: absolute;
+  top: 2px;
+  left: -32px;
   border-radius: 50%;
-  margin-left: 5px;
   border: 2px solid rgb(202, 198, 230);
   cursor: pointer;
 }
@@ -691,15 +708,19 @@ label[for='profile-pic-upload'] {
   position: relative;
 }
 
+.task-wrapper.view-modules .task-header-section {
+  margin-left: 30px;
+}
+
 .task-wrapper.view-modules .task-name {
   font-size: 20px;
-  margin-left: -18px;
+  /* margin-left: -18px; */
 }
 
 .task-wrapper.view-modules .description {
-  width: calc(100% - 30px);
+  /* width: calc(100% - 30px); */
   height: 23px;
-  margin-left: 30px;
+  /* margin-left: 30px; */
   font-size: 15px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -808,13 +829,21 @@ label[for='profile-pic-upload'] {
   position: relative;
   display: flex;
   justify-content: flex-start;
-  align-items: flex-end;
+  align-items: center;
+}
+
+.task-wrapper.view-lists .task-header-section {
+  display: flex;
+  flex-direction: row;
 }
 
 .task-wrapper.view-lists .task-name {
+  /* position: absolute; */
   max-width: 250px;
   font-size: 20px;
   flex-shrink: 0;
+  /* border: 1px solid red; */
+  margin-left: 45px;
 }
 
 .task-wrapper.view-lists .description {
@@ -824,6 +853,8 @@ label[for='profile-pic-upload'] {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  align-self: flex-end;
+  /* border: 1px solid red; */
 }
 
 .task-wrapper.view-lists .date {
@@ -831,6 +862,7 @@ label[for='profile-pic-upload'] {
   right: 0px;
   padding: 0 20px;
   background-color: white;
+  /* border: 1px solid red; */
 }
 
 .task-wrapper.view-lists .priority,
@@ -876,7 +908,7 @@ label[for='profile-pic-upload'] {
     visibility: visible;
     opacity: 1;
   }
-  
+
   .sub-menu-settings {
     width: 180px;
   }
@@ -889,24 +921,35 @@ label[for='profile-pic-upload'] {
 }
 
 @media (max-width: 580px) {
-  .sub-menu {
-    padding: 23px var(--padding-window);
+  .greeting,
+  .username {
+    display: none;
   }
 
-  .sub-menu-title {
+  .sub-menu {
+    padding: 23px var(--padding-window);
+    display: block;
+  }
+
+  .category-title {
+    margin-top: -10px;
+    padding-bottom: 15px;
+  }
+
+  /* .sub-menu-title {
     position: absolute;
     top: 73px;
-  }
+  } */
 
   .task-remain {
     display: none;
   }
 
-  .delete-options-menu{
+  .delete-options-menu {
     top: 21px;
   }
-  
-  .new-task-form{
+
+  .new-task-form {
     left: 16px;
     right: auto;
     top: 140px;
@@ -932,38 +975,23 @@ label[for='profile-pic-upload'] {
     justify-content: left;
   }
 
+  .sidebar.open .sidebar-icon-container {
+    margin-right: 10px;
+  }
+
   .sidebar-icon-container + div {
     position: relative;
     left: 0px;
   }
 
-  .total-tasks-remain {
-    left: 70%;
-  }
-
   .dropdown.show .new-category-form-container {
     width: 100%;
   }
-
-  .new-category-form{
-    bottom: 40px;
-    border-right: none;
-    height: 60px;
-  }
-
-  .btn-create-category{
-    margin-right: 5px;
-    font-size: 30px;
-    
-  }
-  .user-name {
-    display: none;
-  }
 }
 
-@media (max-width: 420px){
+@media (max-width: 420px) {
   .form-row input[type='text'],
-.form-row textarea {
-  width: 188px;
-}
+  .form-row textarea {
+    width: 188px;
+  }
 }

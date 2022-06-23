@@ -35,9 +35,12 @@
               class="search-input"
               data-search-bar-input
             />
-            <button class="btn btn-cancel-search" data-cancel-search>⨉</button>
+            <button class="btn btn-cancel-search" data-cancel-search>
+              <img src="docs/assets/images/cross.png" alt="cancel" style="width: 100%; height: 100%">
+            </button>
           </div>
-          <div class="user-name">Hi, Stranger</div>
+          <div class="greeting" >Hi,</div>
+          <div class="username" contenteditable="true" data-username>Stranger</div>
         </div>
       </header>
 
@@ -63,7 +66,7 @@
             <div class="sidebar-item-wrapper dashboard-wrapper">
               <div class="sidebar-icon-container">
                 <img
-                  src="docs/assets/images/dashboard.png"
+                  src="docs/assets/images/dashboard-black.png"
                   alt="dashboard-icon"
                   style="width: 100%; height: 100%"
                   id="dashboard-icon"
@@ -76,7 +79,7 @@
             <div class="sidebar-item-wrapper">
               <div class="sidebar-icon-container">
                 <img
-                  src="docs/assets/images/all-categories.png"
+                  src="docs/assets/images/all-categories-black.png"
                   alt="folders-icon"
                   style="width: 100%; height: 100%"
                 />
@@ -123,8 +126,8 @@
                 data-delete-category
               >
                 <img
-                  src="docs/assets/images/delete.png"
-                  alt=""
+                  src="docs/assets/images/trash-can.png"
+                  alt="delete category"
                   style="width: 100%; height: 100%"
                 />
               </button>
@@ -245,11 +248,11 @@
                     <textarea rows="3" data-new-task-remarks></textarea>
                   </div>
                   <div class="form-row">
-                    <button class="btn-create-task">Add task</button>
                     <div
-                      class="new-task-error-msg"
-                      data-new-task-error-msg
+                    class="new-task-error-msg"
+                    data-new-task-error-msg
                     ></div>
+                    <button class="btn-create-task">Add task</button>
                   </div>
                 </form>
               </div>
@@ -276,14 +279,16 @@
     <!-- task template -->
     <template id="task-template">
       <div class="task-wrapper">
-        <div class="task-name">
-          <input type="checkbox" />
-          <label>
-            <span class="custom-checkbox"></span>
-          </label>
+        <div class="task-header-section">
+          <div class="task-name">
+            <input type="checkbox" />
+            <label>
+              <span class="custom-checkbox"></span>
+            </label>
+          </div>
+          <!-- <div class="description"  onkeypress="return (this.innerText.length <= 50)">description</div> -->
+          <div class="description">description</div>
         </div>
-        <!-- <div class="description"  onkeypress="return (this.innerText.length <= 50)">description</div> -->
-        <div class="description">description</div>
         <div class="remarks">remarks</div>
         <div class="date">date</div>
         <div class="priority">high</div>

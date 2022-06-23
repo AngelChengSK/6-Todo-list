@@ -1,17 +1,18 @@
 //header
 const menuBtn = document.querySelector('[data-menu-btn]');
-const sidebar = document.querySelector('[data-sidebar]');
 const searchInput = document.querySelector('[data-search-bar-input]');
 const searchCancel = document.querySelector('[data-cancel-search]');
-const profilePicInput = document.querySelector('[data-profile-pic-input]');
-const profilePicContainer = document.querySelector('[data-profile-pic]');
+const editUsername = document.querySelector('[data-username]')
 
 //sidebar
+const sidebar = document.querySelector('[data-sidebar]');
+const profilePicInput = document.querySelector('[data-profile-pic-input]');
+const profilePicContainer = document.querySelector('[data-profile-pic]');
 const DashboardBtn = document.querySelector('[data-dashboard]');
 const totalTasksRemain = document.querySelector('[data-total-tasks-remain]');
 const categoriesContainer = document.querySelector(
   '[data-categories-container]'
-);
+  );
 const newCategoryForm = document.querySelector('[data-new-category-form]');
 const newCategoryInput = document.querySelector('[data-new-category-input]');
 const deleteCategoryBtn = document.querySelector('[data-delete-category]');
@@ -52,12 +53,15 @@ const saveEditTask = document.querySelector('[data-save-edit-task]');
 // ================== variables =====================
 let sortPreference;
 
+const LOCAL_STORAGE_USERNAME_KEY = 'todo.username';
+const LOCAL_STORAGE_PROFILE_PIC_KEY = 'todo.profilePic';
 const LOCAL_STORAGE_CATEGORIES_KEY = 'todo.categoriesList';
 const LOCAL_STORAGE_SELECTED_CATEGORY_ID_KEY = 'todo.selectedCategoryId';
 const LOCAL_STORAGE_VIEW_PREFERENCE = 'todo.viewPreference';
-const LOCAL_STORAGE_SORT_PREFERENCE = 'todo.sortPreference';
-const LOCAL_STORAGE_PROFILE_PIC_KEY = 'todo.profilePic';
+// const LOCAL_STORAGE_SORT_PREFERENCE = 'todo.sortPreference';
 
+let username = localStorage.getItem(LOCAL_STORAGE_USERNAME_KEY) || "Stranger";
+let profilePic = localStorage.getItem(LOCAL_STORAGE_PROFILE_PIC_KEY);
 let masterList =
   JSON.parse(localStorage.getItem(LOCAL_STORAGE_CATEGORIES_KEY)) || [];
 let selectedCategoryId = JSON.parse(
@@ -65,7 +69,6 @@ let selectedCategoryId = JSON.parse(
 );
 let viewPreference =
   localStorage.getItem(LOCAL_STORAGE_VIEW_PREFERENCE) || 'view-modules';
-let profilePic = localStorage.getItem(LOCAL_STORAGE_PROFILE_PIC_KEY);
 
 // ================== event listeners =====================
 
@@ -73,11 +76,44 @@ document.addEventListener('DOMContentLoaded', () => {
   if (profilePic) {
     profilePicContainer.style.backgroundImage = `url(${profilePic})`;
   }
+
+  if (username) {
+    editUsername.innerText = username;
+  }
 });
 
 menuBtn.addEventListener('click', () => {
   sidebar.classList.toggle('open');
 });
+
+//when typing in search bar
+searchInput.addEventListener('keyup', (e) => {
+  const searchString = searchInput.value;
+  searchTasks(searchString);
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    searchInput.value = '';
+  }
+  if (searchInput.value !== '') {
+    searchCancel.classList.add('active');
+  } else {
+    searchCancel.classList.remove('active');
+  }
+});
+
+searchCancel.addEventListener('click', () => {
+  searchInput.value = '';
+  searchTasks('');
+  searchCancel.classList.remove('active');
+});
+
+editUsername.addEventListener('keyup', (e) => {
+  if (e.key == "Enter") {
+   editUsername.innerText="ERROR"
+  }
+
+  localStorage.setItem(LOCAL_STORAGE_USERNAME_KEY, e.target.innerText)
+})
 
 sidebar.addEventListener('click', () => {
   if (!sidebar.classList.contains('open')) {
@@ -172,7 +208,7 @@ tasksContainer.addEventListener('click', (e) => {
   const selectedTask = selectedCategory.tasks.find(
     (task) => task.id == selectedTaskId
   );
-
+  
   if (
     e.target.tagName.toLowerCase() === 'input' &&
     e.target.getAttribute('type') === 'checkbox'
@@ -222,26 +258,6 @@ tasksContainer.addEventListener('click', (e) => {
   }
 });
 
-//when typing in search bar
-searchInput.addEventListener('keyup', (e) => {
-  const searchString = searchInput.value;
-  searchTasks(searchString);
-  if (e.key === 'Enter') {
-    e.preventDefault();
-    searchInput.value = '';
-  }
-  if (searchInput.value !== '') {
-    searchCancel.classList.add('active');
-  } else {
-    searchCancel.classList.remove('active');
-  }
-});
-
-searchCancel.addEventListener('click', () => {
-  searchInput.value = '';
-  searchTasks('');
-  searchCancel.classList.remove('active');
-});
 
 DashboardBtn.addEventListener('click', () => {
   selectedCategoryId = null;
