@@ -564,7 +564,7 @@ label[for='profile-pic-upload'] {
 
 .new-task-form {
   position: absolute;
-  right: 20px;
+  right: 30px;
   background-color: white;
   padding: 10px 20px 50px 20px;
   margin-top: var(--dropdown-margin-top);
@@ -583,7 +583,8 @@ label[for='profile-pic-upload'] {
 
 .form-row label {
   font-size: 16px;
-  width: 100px;
+  width: 90px;
+  flex-shrink: 0;
 }
 
 .form-row input,
@@ -597,7 +598,8 @@ label[for='profile-pic-upload'] {
 
 .form-row input[type='text'],
 .form-row textarea {
-  width: 250px;
+  width: 100%;
+  min-width: 280px;
 }
 
 .form-row textarea {
@@ -653,7 +655,7 @@ label[for='profile-pic-upload'] {
   background-color: rgb(10, 106, 104);
   transform: scaleX(0);
   transform-origin: bottom right;
-  transition: transform 350ms ease-out;
+  transition: transform 200ms ease-out;
 }
 
 .sort-all.show,
@@ -974,8 +976,8 @@ label[for='profile-pic-upload'] {
   }
 
   .new-task-form {
-    left: 16px;
-    right: auto;
+    left: 30px;
+    right: 30px;
     top: 140px;
   }
 
@@ -1012,15 +1014,15 @@ label[for='profile-pic-upload'] {
   .dropdown.show .new-category-form-container {
     width: 100%;
   }
+
+  .form-row input[type='text'],
+  .form-row textarea {
+    min-width: 140px;
+  }
 }
 
 @media (max-width: 420px) {
-  .form-row input[type='text'],
-  .form-row textarea {
-    width: 188px;
-  }
-
   .new-task-error-msg {
-    font-size: 14px;
+    font-size: 13px;
       }
 }
